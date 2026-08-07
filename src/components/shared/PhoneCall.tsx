@@ -19,6 +19,17 @@ import "./phone-call.css"
 
 type CallPhase = "dialing" | "ringing" | "operator" | "transferring" | "connected" | "busy" | "voicemail" | "anomaly" | "unknown"
 type PhoneCallContextValue = { callExtension: (staffId: string) => void; callMain: () => void }
+type SpeechVoiceKind = "operator" | "staff"
+type StaffVoiceProfile = { pitch:number; rate:number; voiceOffset:number }
+
+const staffVoiceProfiles:Record<string,StaffVoiceProfile> = {
+  "dai-chiqing":{pitch:.94,rate:.84,voiceOffset:0}, "he-zhishun":{pitch:.91,rate:.9,voiceOffset:1},
+  "ming-hao":{pitch:.88,rate:.78,voiceOffset:2}, "wu-wei":{pitch:.93,rate:.81,voiceOffset:3},
+  "lan-yan":{pitch:.98,rate:.88,voiceOffset:4}, "song-tingyan":{pitch:.9,rate:.96,voiceOffset:5},
+  "zhu-lan":{pitch:.96,rate:.83,voiceOffset:6}, "hua-yu":{pitch:1,rate:.91,voiceOffset:7},
+  "ju-qi":{pitch:.97,rate:.99,voiceOffset:8}, "chu-riyang":{pitch:.99,rate:.86,voiceOffset:9},
+  "ling-luan":{pitch:.9,rate:.87,voiceOffset:10},
+}
 
 const PhoneCallContext = createContext<PhoneCallContextValue>({ callExtension: () => {}, callMain: () => {} })
 export const usePhoneCall = () => useContext(PhoneCallContext)
@@ -106,7 +117,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     timers.current.push(second)
   }, [tone])
 
-  const speak = useCallback((text: string, onEnd?: () => void) => {
+  const speak = useCallback((text: string, onEnd?: () => void, voiceKind: SpeechVoiceKind = "operator", staffId?:string) => {
     const schedule = window.setTimeout.bind(window)
     if (!("speechSynthesis" in window)) {
       const fallbackTimer = schedule(() => onEnd?.(), Math.max(900, text.length * 145))
@@ -116,11 +127,23 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     window.speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = "zh-TW"
-    utterance.rate = .9
-    utterance.pitch = .96
+    const staffVoice = staffVoiceProfiles[staffId ?? ""] ?? {pitch:.72,rate:.86,voiceOffset:0}
+    utterance.rate = voiceKind === "staff" ? staffVoice.rate : .9
+    utterance.pitch = voiceKind === "staff" ? staffVoice.pitch : 1.02
     const voices = window.speechSynthesis.getVoices()
-    utterance.voice = voices.find(voice => voice.lang.toLowerCase().startsWith("zh-tw"))
-      ?? voices.find(voice => voice.lang.toLowerCase().startsWith("zh"))
+    const chineseVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith("zh"))
+    const preferredNames = voiceKind === "staff"
+      ? ["li-mu", "zhiwei", "yunyang", "yunxi", "yunjian", "kangkang", "eddy", "reed", "rocko", "grandpa", "male", "男"]
+      : ["meijia", "ting-ting", "hanhan", "yating", "xiaoxiao", "female", "女"]
+    const namedVoices = preferredNames
+      .map(name => chineseVoices.find(voice => voice.name.toLowerCase().includes(name)))
+      .filter((voice): voice is SpeechSynthesisVoice => Boolean(voice))
+    const preferredVoice = voiceKind === "staff"&&namedVoices.length
+      ? namedVoices[staffVoice.voiceOffset%namedVoices.length]
+      : namedVoices[0]
+    utterance.voice = preferredVoice
+      ?? chineseVoices.find(voice => voice.lang.toLowerCase().startsWith("zh-tw"))
+      ?? chineseVoices[0]
       ?? null
     utterance.onend = () => onEnd?.()
     utterance.onerror = event => {
@@ -155,10 +178,24 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     setPhase("connected")
     setElapsed(0)
     setExtensionInput("")
-    const line = extensionScripts[member.id] ?? member.quote.replace(/[「」]/g, "")
-    setTranscript(line)
-    speak(line)
-  }, [speak, stopRing])
+    const pool = extensionScripts[member.id] ?? [member.quote.replace(/[「」]/g, "")]
+    const lines = [...pool].sort(() => Math.random() - .5).slice(0, 3)
+    const playLine = (index: number) => {
+      const line = lines[index]
+      setTranscript(line)
+      speak(line, () => {
+        if (index === lines.length - 1) {
+          const endTimer = window.setTimeout(hangUp, 350)
+          timers.current.push(endTimer)
+          return
+        }
+        const delay = index === 0 ? wait(2000, 3000) : wait(1000, 3000)
+        const nextTimer = window.setTimeout(() => playLine(index + 1), delay)
+        timers.current.push(nextTimer)
+      }, "staff", member.id)
+    }
+    playLine(0)
+  }, [hangUp, speak, stopRing])
 
   const enterVoicemail = useCallback(() => {
     stopRing()

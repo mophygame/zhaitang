@@ -151,7 +151,7 @@ friendshipCreators[0]={
   discordUrl:"https://discord.gg/5Q94M7Gtua",
   profileUrl:"https://caveduck.io/user/H_mori",
   recommendedWorks:[
-    {title:"真實瑟瑟聲音工作室",hashtags:["NSFW","劇情","高肉"],url:"",image:"/assets/work/黃森_真實瑟瑟聲音工作室_optimized.gif"},
+    {title:"真實瑟瑟聲音工作室",hashtags:["NSFW","劇情","高肉"],url:"",image:"/assets/work/黃森_真實瑟瑟聲音工作室.gif"},
     {title:"白言沐",hashtags:["劇情","虐戀"],url:"",image:"/assets/work/黃森_白言沐.webp"},
     {title:"死囚軍團阿維斯塔",hashtags:["恐怖","劇情","搞笑"],url:"",image:"/assets/work/黃森_死囚軍團阿維斯塔.gif"},
   ],
