@@ -1,5 +1,6 @@
 .contact-time-range { min-width:0;margin:0;padding:0;border:0;color:#8b9298; }
 .contact-time-range legend { padding:0;font-size:11px; }
+.required-mark { margin-left:3px;color:#d96262;font-weight:700; }
 .time-inputs { display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:end; }
 .time-inputs > span { min-width:0; }
 .time-inputs small { display:block;margin-bottom:3px;color:#8b9298;font-size:9px; }
