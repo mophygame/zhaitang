@@ -23,23 +23,16 @@ export default function AppImage({
 }: AppImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src)
   const [usingFallback, setUsingFallback] = useState(false)
-  const [triedAlternateFormat, setTriedAlternateFormat] = useState(false)
   const [triedProvidedFallback, setTriedProvidedFallback] = useState(false)
 
   useEffect(() => {
     setCurrentSrc(src)
     setUsingFallback(false)
-    setTriedAlternateFormat(false)
     setTriedProvidedFallback(false)
   }, [src])
 
   const handleError = (event: SyntheticEvent<HTMLImageElement, Event>) => {
     onError?.(event)
-    if (!triedAlternateFormat && typeof currentSrc === "string" && /\.(webp|gif)(?=$|\?)/i.test(currentSrc)) {
-      setTriedAlternateFormat(true)
-      setCurrentSrc(currentSrc.replace(/\.(webp|gif)(?=$|\?)/i, extension => extension.toLowerCase() === ".webp" ? ".gif" : ".webp"))
-      return
-    }
     if (!triedProvidedFallback && fallbackSrc) {
       setTriedProvidedFallback(true)
       setCurrentSrc(fallbackSrc)
