@@ -1,0 +1,3 @@
+import type {Metadata} from "next";import {properties} from "@/data/properties";import {PropertyFilters} from "@/components/properties/PropertyComponents";import {SectionTitle} from "@/components/shared/UI";
+export const metadata:Metadata={title:"特殊物件檔案"};
+export default function PropertiesPage(){return <><section className="page-hero"><p className="kicker">CLASSIFIED PROPERTY ARCHIVE</p><h1>特殊物件檔案</h1><p>所有地址皆經模糊處理。部分物件即使顯示可出售，也不代表建議於夜間看房。</p></section><section className="section archive" id="records"><SectionTitle eyebrow="8 ENTRIES DECLASSIFIED" title="搜尋案件紀錄"/><PropertyFilters properties={properties}/></section></>}

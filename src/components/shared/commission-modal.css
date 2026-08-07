@@ -1,0 +1,8 @@
+.contact-time-range { min-width:0;margin:0;padding:0;border:0;color:#8b9298; }
+.contact-time-range legend { padding:0;font-size:11px; }
+.time-inputs { display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:end; }
+.time-inputs > span { min-width:0; }
+.time-inputs small { display:block;margin-bottom:3px;color:#8b9298;font-size:9px; }
+.time-inputs i { padding-bottom:10px;color:#8b9298;font-style:normal; }
+.time-inputs input[type="time"] { min-width:0;color-scheme:dark; }
+@media(max-width:640px){.time-inputs{grid-template-columns:1fr}.time-inputs i{padding:0;text-align:center}}

@@ -1,0 +1,35 @@
+"use client";
+import Image from "next/image";import Link from "next/link";import {useMemo,useState} from "react";import type {Property} from "@/types";import {EmptyState} from "@/components/shared/UI";
+export function AnomalyBadge({level}:{level:string}){return <span className={`badge anomaly ${level.includes("高危")?"danger":""}`}>{level}</span>}
+export function StatusBadge({status}:{status:string}){return <span className="badge status">{status}</span>}
+export function PropertyCard({property}:{property:Property}){return <Link href={`/properties/${property.id}`} className="property-card"><div className="property-image"><Image src={property.coverImage} alt={`${property.title}外觀`} fill sizes="(max-width: 700px) 100vw, 33vw"/><Image className="before-peek" src={property.beforeImage} alt="" fill sizes="33vw"/><span className="case-no">{property.caseNumber}</span><span className="apparition" aria-hidden="true"/></div><div className="property-body"><div className="badge-row"><AnomalyBadge level={property.anomalyLevel}/><StatusBadge status={property.status}/></div><h3>{property.title}</h3><p>{property.address}</p><dl><div><dt>格局</dt><dd>{property.layout}</dd></div><div><dt>坪數</dt><dd>{property.area.toFixed(1)} 坪</dd></div><div><dt>屋齡</dt><dd>{property.age} 年</dd></div></dl><div className="price"><small>售價</small>{property.price?`NT$ ${property.price.toLocaleString()}`:"價格面議"}</div>{!property.availableForSale&&<p className="unavailable">目前不開放看房</p>}</div></Link>}
+export function PropertyGrid({items}:{items:Property[]}){return items.length?<div className="property-grid">{items.map(p=><PropertyCard key={p.id} property={p}/>)}</div>:<EmptyState/>}
+type Filters={region:string;type:string;anomaly:string;status:string;sale:string;query:string;sort:string};
+const initial:Filters={region:"",type:"",anomaly:"",status:"",sale:"",query:"",sort:"latest"};
+export function PropertyFilters({properties}:{properties:Property[]}){
+  const [f,setF]=useState(initial)
+  const [shown,setShown]=useState(6)
+  const set=(k:keyof Filters,v:string)=>setF(x=>({...x,[k]:v}))
+  const options=(k:keyof Property)=>[...new Set(properties.map(p=>String(p[k])))]
+  const reset=()=>{setF(initial);setShown(6)}
+  const items=useMemo(()=>properties.filter(p=>(!f.query||(p.title+p.address+p.caseNumber).includes(f.query))&&(!f.region||p.region===f.region)&&(!f.type||p.propertyType===f.type)&&(!f.anomaly||p.anomalyLevel===f.anomaly)&&(!f.status||p.status===f.status)&&(!f.sale||String(p.availableForSale)===f.sale)).sort((a,b)=>f.sort==="low"?(a.price??Infinity)-(b.price??Infinity):f.sort==="high"?(b.price??-1)-(a.price??-1):f.sort==="anomaly"?b.pollutionBefore-a.pollutionBefore:b.completedAt.localeCompare(a.completedAt)),[f,properties])
+  return <>
+    <div className="filters">
+      <input aria-label="搜尋物件" placeholder="搜尋地址、案件或物件名稱" value={f.query} onChange={e=>set("query",e.target.value)}/>
+      <select aria-label="地區" value={f.region} onChange={e=>set("region",e.target.value)}><option value="">地區</option>{options("region").map(x=><option key={x}>{x}</option>)}</select>
+      <select aria-label="房型" value={f.type} onChange={e=>set("type",e.target.value)}><option value="">房型</option>{options("propertyType").map(x=><option key={x}>{x}</option>)}</select>
+      <select aria-label="異常等級" value={f.anomaly} onChange={e=>set("anomaly",e.target.value)}><option value="">異常等級</option>{options("anomalyLevel").map(x=><option key={x}>{x}</option>)}</select>
+      <select aria-label="處理狀態" value={f.status} onChange={e=>set("status",e.target.value)}><option value="">處理狀態</option>{options("status").map(x=><option key={x}>{x}</option>)}</select>
+      <select aria-label="是否可出售" value={f.sale} onChange={e=>set("sale",e.target.value)}><option value="">出售狀態</option><option value="true">可出售</option><option value="false">暫停看房</option></select>
+      <select aria-label="排序" value={f.sort} onChange={e=>set("sort",e.target.value)}><option value="latest">最新案件</option><option value="low">價格由低到高</option><option value="high">價格由高到低</option><option value="anomaly">異常等級</option></select>
+      <button type="button" className="gold-button filter-reset" onClick={reset} disabled={JSON.stringify(f)===JSON.stringify(initial)}>重設條件</button>
+    </div>
+    <p className="result-count">已解封 {items.length} 筆案件資料</p>
+    <PropertyGrid items={items.slice(0,shown)}/>
+    {shown<items.length&&<button className="load-more" onClick={()=>setShown(x=>x+3)}>載入更多案件</button>}
+  </>
+}
+export function PropertySearch({properties}:{properties:Property[]}){const [region,setRegion]=useState("");const [type,setType]=useState("");const [anomaly,setAnomaly]=useState("");const count=properties.filter(p=>(!region||p.region===region)&&(!type||p.propertyType===type)&&(!anomaly||p.anomalyLevel===anomaly)).length;return <div className="property-search"><label>地區<select onChange={e=>setRegion(e.target.value)}><option value="">全台灣</option>{[...new Set(properties.map(p=>p.region))].map(x=><option key={x}>{x}</option>)}</select></label><label>物件類型<select onChange={e=>setType(e.target.value)}><option value="">不限類型</option>{[...new Set(properties.map(p=>p.propertyType))].map(x=><option key={x}>{x}</option>)}</select></label><label>預算<select><option>不限預算</option><option>1,500 萬以下</option><option>1,500–3,000 萬</option></select></label><label>異常等級<select onChange={e=>setAnomaly(e.target.value)}><option value="">不限紀錄</option>{["無紀錄","低度殘留","持續異常","高危封鎖","資料不公開"].map(x=><option key={x}>{x}</option>)}</select></label><Link className="gold-button" href={`/properties?region=${encodeURIComponent(region)}`}>搜尋 {count} 筆物件</Link></div>}
+export function BeforeAfterSlider({before,after,beforeAlt="處理前",afterAlt="處理後"}:{before:string;after:string;beforeAlt?:string;afterAlt?:string}){const [value,setValue]=useState(50);return <div className="compare"><Image src={after} alt={afterAlt} fill sizes="100vw"/><div className="before-layer" style={{width:`${value}%`}}><Image src={before} alt={beforeAlt} fill sizes="100vw"/></div><input aria-label="拖曳比較處理前後" type="range" min="0" max="100" value={value} onChange={e=>setValue(+e.target.value)}/><div className="divider" style={{left:`${value}%`}}/><span className="label before">處理前</span><span className="label after">處理後</span></div>}
+export function AnomalyMetrics({property:p}:{property:Property}){const rows=[["污染指數",p.pollutionBefore,p.pollutionAfter],["空間穩定度",p.stabilityBefore,p.stabilityAfter],["靈體活動",88,4],["契約完整度",32,100]] as const;return <div className="metrics">{rows.map(([name,b,a])=><div className="metric" key={name}><div><b>{name}</b><span>{b}% → <em>{a}%</em></span></div><div className="bars"><i style={{width:`${b}%`}}/><i className="after" style={{width:`${a}%`}}/></div></div>)}<div className="rating"><span>可居住評級</span><b>{p.availableForSale?"A / 可正常入住":"E / 禁止進入"}</b></div></div>}
+export function CaseTimeline({items}:{items:Property["timeline"]}){return <ol className="timeline">{items.map(x=><li key={x.date+x.event}><time>{x.date}</time><span>{x.event}</span></li>)}</ol>}

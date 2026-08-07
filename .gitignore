@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Generated builds and caches
+dist/
+.next/
+*.tsbuildinfo
+
+# Cloudflare local state and logs
+.wrangler/
+
+# Local environment values
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# Temporary and operating-system files
+tmp/
+.DS_Store
+*.log

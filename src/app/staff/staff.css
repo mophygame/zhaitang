@@ -1,0 +1,31 @@
+.staff-modal {
+  width: min(1000px, 100%);
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.staff-modal-image {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 9 / 16;
+  align-self: start;
+  overflow: hidden;
+  background: #0d1012;
+}
+
+.staff-modal-image img {
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .staff-modal {
+    grid-template-columns: 1fr;
+  }
+
+  .staff-modal-image {
+    width: min(100%, 360px);
+    min-height: 0;
+    justify-self: center;
+  }
+}

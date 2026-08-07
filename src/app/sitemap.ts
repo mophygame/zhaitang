@@ -1,0 +1,1 @@
+import type {MetadataRoute} from "next";import {properties} from "@/data/properties";export default function sitemap():MetadataRoute.Sitemap{const base="https://zhaitang.example";return ["","/properties","/staff","/creators","/paranormal-photo",...properties.map(p=>`/properties/${p.id}`)].map(url=>({url:base+url,lastModified:new Date()}))}
