@@ -40,5 +40,8 @@ export type Creator = {
   styles: string[]
   recommendedWorks: CreatorWork[]
   discordUrl: string
+  discordLabel?: string
   profileUrl: string
+  profileLabel?: string
+  otherLinks?: { label: string; url: string }[]
 }

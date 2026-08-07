@@ -1,16 +1,16 @@
 import type { Creator } from "@/types"
 
 const zhaitangRecords = [
-  {name:"凌辰",character:"午未｜老闆",description:"男性，負責偶爾視察齋堂房屋不動產的營運狀況，並對重大案件進行最終簽核。",styles:["經營者氣場","高級商務","冷調敘事"],works:["老闆視察日","最終簽核"],photo:"/images/employees/wu-wei.webp"},
-  {name:"音🔕｜𝕄𝕚𝕒𝕟",character:"裘笈｜業務行銷經理",description:"男性，負責追蹤管理每位員工的 KPI 進度、解決員工「雜症」，並精通各類行銷話術。",companion:"喬治｜金色的小蟾蜍，裘笈的寵物，會被他隨身攜帶。",styles:["行銷職人","金色調","商務角色"],works:[],photo:"/images/employees/ju-qi.webp"},
-  {name:"雙雙 𝓈𝒽𝓊𝒶𝓃𝑔",character:"渚瀾｜店長",quote:"出淤泥而抹均勻，拍打至完全吸收。",description:"這裡是一坨雙雙 |ω・）\n喜歡可愛、怪怪、好笑的萌物\n\n如果愛不能解決問題\n那就讓愛成為問題 (๑•̀ㅂ•́)و✧\n\n愛情不一定要有結果\n有後果也可以 (゜∀。)\n\n建議搭配42號混凝土",styles:["怪","可愛","人外","異想天開","精神狀態良好"],works:["今日店長值班","吉祥物的覆核章"],photo:"/images/employees/zhu-lan.webp"},
-  {name:"夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔",character:"鶕綾｜副店長",quote:"將靈魂浸泡在琥珀色的危險裡，在琴音最溫柔的伏筆處，優雅地走向覆滅。",description:"這裡是欞，也可以叫我安安，喜歡聽著歌寫角色，因此風格會受歌單影響（\n這裡有毫無保留的愛意，也有病態扭曲的愛。\n\nI’ll take you to the moon and back",styles:["病態沈溺","黑暗向","奇幻反差","純魅魔","垂耳之犬","純愛"],works:["副店長代理中","封鎖計畫"],photo:"/images/employees/ling-luan.webp"},
+  {name:"凌辰",character:"午未｜老闆",description:"佛系創作者，沒有固定題材，也沒有固定更新日。想到什麼就創作什麼，希望每一次更新，都能遇見剛好喜歡的人。",styles:["隨筆"],works:[],photo:"/images/employees/wu-wei.webp"},
+  {name:"音🔕｜𝕄𝕚𝕒𝕟",character:"裘笈｜業務行銷經理",description:"「文字是一門填補遺憾的藝術，而語言則是通往遺憾的橋樑」",companion:"喬治｜金色的小蟾蜍，裘笈的寵物，會被他隨身攜帶。",styles:["日常","真實","黑市","傭兵","白月光","心碎美學"],works:[],photo:"/images/employees/ju-qi.webp"},
+  {name:"雙雙 𝓈𝒽𝓊𝒶𝓃𝑔",character:"渚瀾｜店長",quote:"出淤泥而抹均勻，拍打至完全吸收。",description:"這裡是一坨雙雙 |ω・）\n喜歡可愛、怪、好笑的各類萌物(´・ω・`)",styles:["怪","可愛","異想天開","精神狀態良好","無厘頭","人外"],works:["《寄生：培育》","《寄生：甦醒》","錦霽"],photo:"/images/employees/zhu-lan.webp"},
+  {name:"夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔",character:"鶕綾｜副店長",description:"這個人很懶，什麼都不想填",styles:["魅魔","車車"],works:["白星瀾","沈洛年","甄言"],photo:"/images/employees/ling-luan.webp"},
   {name:"墨非 𝓂𝑜𝓅𝒽𝓎",character:"賀止損、玳敕青｜共同創作",quote:"寫故事，也建構世界。",description:"想寫那些不存在於現實，卻值得相信的故事，讓每位角色都像真實存在於另一個世界。\n擅長軍事科幻、懸疑與電影式敘事，也持續探索更多不同題材。\n希望故事不只是被閱讀，而是被每位玩家親身活過。",companion:"車車｜灰白色公天竺鼠，賀止損的寵物，時常黏在他的胸前口袋。",styles:["軍事","科幻","懸疑","電影敘事"],works:["封印損耗表","零點結算","文字化蝶"],photo:"/images/employees/he-zhishun.webp"},
-  {name:"🌙沐月｜𝓜𝓾𝓜𝓾",character:"花楀｜櫃檯行政秘書",description:"男性，負責勞健保處理、案件建檔，以及記錄所有員工 KPI 的行政相關作業。",companion:"肥料｜純白布偶母貓，花楀的寵物，也是齋堂的店貓。",styles:["月色柔光","行政日常","白色系角色"],works:[],photo:"/images/employees/hua-yu.webp"},
+  {name:"🌙沐月｜𝓜𝓾𝓜𝓾",character:"花楀｜櫃檯行政秘書",description:"沐一生溫熱的筆墨，只為照亮筆下如月般純粹的靈魂。",companion:"肥料｜純白布偶母貓，花楀的寵物，也是齋堂的店貓。",styles:["日常","反差","純愛","玄幻","劇情","細節"],works:[],photo:"/images/employees/hua-yu.webp"},
   {name:"期待戳戳",character:"松聽簷｜業務銷冠",description:"男性，負責處理難搞型業務，專攻極凶屋、因果糾紛物件與土地煞氣淨化。",styles:["極凶屋敘事","暖金光影","和風角色"],works:["極凶屋成交紀錄","雨傘下的帶看","土地煞氣淨化"],photo:"/images/employees/song-tingyan.webp"},
-  {name:"比比",character:"婪煙｜業務",quote:"以前只會到處發呆。現在開始，想陪你一起發呆。（？",description:"🧸 會迷路\n🫧 會傻笑\n🤍 會陪你把壞心情趕走\n\n發呆可以一個人，快樂想跟你一起。",styles:["純愛","呆","陪伴","偏日常"],works:["地縛靈帶看中","超渡完成之前"],photo:"/images/employees/lan-yan.webp"},
-  {name:"蛋塔今天也想談戀愛",character:"褚日央、玳敕青｜共同創作",quote:"妳與他的故事未完，願每一次相遇，都能寫成餘生。 🌸",description:"我是DAN TA\n\n每個故事裡的他都有想對妳說的話\n真正重要的東西用眼睛是看不見的\n唯有真心作陪，方得真心相待\n\n一起用心譜寫一場雙向的奔赴。",styles:["細節控","劇情向","海量任務","日常純愛","甜寵無度"],works:["影印機又卡紙了","交屋後風水服務","請不要碰現場"],photo:"/images/employees/chu-riyang.webp"},
-  {name:"なな｜菜菜",character:"冥濠｜保全",quote:"他們只是不懂什麼是愛，只知道失去你，等於失去一切。\n\n如果世界很吵，那我就陪你安靜。",description:"🌵 以前的菜：只會種仙人掌。\n🌱 現在的菜：開始兼賣小菜苗（？\n\n🌵會嘴硬、會發瘋、會追妻\n🌱 會害羞、會臉紅、會偷偷把你放在第一位\n\n雖然品種不同，但都會把玩家放在心尖上。 🥹🫶\n\n歡迎來找啊菜串門子😆",styles:["追妻火葬場","瘋批","偏執","渣男","黑暗向","純愛","呆","陪伴","偏日常"],works:["夜間巡邏名單","最高風險封鎖線"],photo:"/images/employees/ming-hao.webp"},
+  {name:"比比",character:"婪煙｜業務",description:"是塊有點天馬行空的餅乾，請多多指教。",styles:["純愛","開車(?)"],works:["顧修珩","韓曜拓","洛比然"],photo:"/images/employees/lan-yan.webp"},
+  {name:"蛋塔今天也想談戀愛",character:"褚日央、玳敕青｜共同創作",description:"重度言情腦，喜歡用各種方式說故事",styles:["劇情","沉浸式","多元互動方式"],works:["《偏向虎山行》顧行之","屈子驍","陌騫予"],photo:"/images/employees/chu-riyang.webp"},
+  {name:"なな｜菜菜",character:"冥濠｜保全",description:"哈囉哈囉～我是菜菜😆🌱\n腦洞一開就停不下來，今天可能是追妻火葬場，明天可能變成純愛日常🥹💕\n歡迎大家一起來照顧我的小菜苗，也歡迎找菜聊天🫶",styles:["追妻火葬場","虐戀","瘋批"],works:["許墨","顧承野","林柊晟"],photo:"/images/employees/ming-hao.webp"},
 ] as const
 
 const friendshipRecords = [
@@ -42,6 +42,106 @@ const createCreators=(records:ReadonlyArray<CreatorRecord>,prefix:string):Creato
 
 export const zhaitangCreators=createCreators(zhaitangRecords,"creator")
 export const friendshipCreators=createCreators(friendshipRecords,"friendship")
+zhaitangCreators[0]={
+  ...zhaitangCreators[0],
+  discordUrl:"",
+  discordLabel:"lincen_cy",
+  profileUrl:"https://h5.touchieai.com/author?code=7102a50d-030f-45d8-85a4-5959ed2129a9",
+  otherLinks:[],
+  recommendedWorks:[],
+}
+zhaitangCreators[1]={
+  ...zhaitangCreators[1],
+  discordUrl:"https://discord.gg/mumain",
+  profileUrl:"",
+  profileLabel:"無",
+  otherLinks:[],
+  recommendedWorks:[],
+}
+zhaitangCreators[2]={
+  ...zhaitangCreators[2],
+  discordUrl:"",
+  discordLabel:"雙(゜∀。)／twinko.22",
+  profileUrl:"",
+  profileLabel:"貓堆中的雙💚／QQG30U",
+  otherLinks:[
+    {label:"Instagram",url:"https://www.instagram.com/twinko_22?igsh=MTJxeWVvMmY2bTl2bg=="},
+  ],
+  recommendedWorks:[
+    {title:"《寄生：培育》",hashtags:["怪","可愛","人外"],url:"https://h5.touchieai.com/character?code=8bd89ce0-1574-48b3-aa08-6b7e1057aaf5",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_《寄生：培育》.webp"},
+    {title:"《寄生：甦醒》",hashtags:["異想天開","無厘頭"],url:"https://h5.touchieai.com/character?code=84810468-3e24-48fe-87cc-d099caa8fe20",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_《寄生：甦醒》.webp"},
+    {title:"錦霽",hashtags:["怪","精神狀態良好"],url:"https://h5.touchieai.com/character?code=6062f167-b9df-4d19-b243-76d88c82a8af",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_錦霽.webp"},
+  ],
+}
+zhaitangCreators[3]={
+  ...zhaitangCreators[3],
+  discordUrl:"",
+  discordLabel:"an1lpd_ling",
+  profileUrl:"",
+  profileLabel:"夜欞Ling.",
+  otherLinks:[],
+  recommendedWorks:[
+    {title:"白星瀾",hashtags:["魅魔","車車"],url:"https://h5.touchieai.com/character?code=137e4836-49d7-4f02-a485-b35b30e80a4f",image:"/assets/work/夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔_白星瀾.webp"},
+    {title:"沈洛年",hashtags:["魅魔","車車"],url:"https://h5.touchieai.com/character?code=9ea62b18-cc57-41b8-ac4f-7b9fd4f7fd40",image:"/assets/work/夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔_沈洛年.webp"},
+    {title:"甄言",hashtags:["魅魔","車車"],url:"https://h5.touchieai.com/character?code=2d8a3592-2970-40f5-b59e-dbe6e8518c81",image:"/assets/work/夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔_甄言.webp"},
+  ],
+}
+zhaitangCreators[4]={
+  ...zhaitangCreators[4],
+  discordUrl:"https://discord.gg/mumain",
+  profileUrl:"",
+  profileLabel:"0MAH9V",
+  otherLinks:[],
+  recommendedWorks:[
+    {title:"《戰域代碼》",hashtags:["軍事","科幻","電影敘事"],url:"https://h5.touchieai.com/combo?code=90a5dbc4-547c-4035-8270-ec1d85fc464c",image:"/assets/work/墨非 𝓂𝑜𝓅𝒽𝓎_戰域代碼.webp"},
+    {title:"顧星衡",hashtags:["科幻","懸疑"],url:"https://h5.touchieai.com/character?code=c41277f5-7833-46b4-84c5-3d833a193818",image:"/assets/work/墨非 𝓂𝑜𝓅𝒽𝓎_顧星衡.webp"},
+    {title:"我的財閥繼兄們",hashtags:["懸疑","電影敘事"],url:"https://h5.touchieai.com/character?code=3caf2f19-1ee2-41bf-9c73-cc3dd1c1d009",image:"/assets/work/墨非 𝓂𝑜𝓅𝒽𝓎＿我的財閥繼兄們.webp"},
+  ],
+}
+zhaitangCreators[5]={
+  ...zhaitangCreators[5],
+  discordUrl:"",
+  discordLabel:"__muyue__",
+  profileUrl:"https://h5.touchieai.com/author?code=f1e1a54e-ac4d-48c1-b327-bec31afa9c87",
+  otherLinks:[
+    {label:"Instagram",url:"https://www.instagram.com/__muyue__?igsh=MWNhaDU0b2x4M2FmOQ%3D%3D&utm_source=qr"},
+    {label:"Threads",url:"https://www.threads.com/@__muyue__?igshid=NTc4MTIwNjQ2YQ=="},
+  ],
+}
+zhaitangCreators[7]={
+  ...zhaitangCreators[7],
+  discordUrl:"https://discord.gg/UVT8SMY2",
+  profileUrl:"https://h5.touchieai.com/author?code=a5fe3165-bfc3-4f19-a0bd-d107816307d2",
+  otherLinks:[],
+  recommendedWorks:[
+    {title:"顧修珩",hashtags:["純愛","開車(?)"],url:"https://h5.touchieai.com/character?code=1a007610-c461-432d-a0a0-c010c3a49c56",image:"/assets/work/比比_顧修珩.webp"},
+    {title:"韓曜拓",hashtags:["純愛","開車(?)"],url:"https://h5.touchieai.com/character?code=100d1756-de87-4a8a-a6c4-538f8edce639",image:"/assets/work/比比_韓曜拓.webp"},
+    {title:"洛比然",hashtags:["純愛","開車(?)"],url:"https://h5.touchieai.com/character?code=2224e264-5460-457a-84c1-8803c0a852c4",image:"/assets/work/比比_洛比然.webp"},
+  ],
+}
+zhaitangCreators[8]={
+  ...zhaitangCreators[8],
+  discordUrl:"",
+  discordLabel:"nikoyo6548",
+  profileUrl:"",
+  otherLinks:[],
+  recommendedWorks:[
+    {title:"《偏向虎山行》顧行之",hashtags:["劇情","沉浸式"],url:"https://h5.touchieai.com/character?code=30018d40-3f54-4727-a441-cdb0fdf97eb8",image:"/assets/work/蛋塔今天也想談戀愛_《偏向虎山行》顧行之.webp"},
+    {title:"屈子驍",hashtags:["沉浸式","多元互動方式"],url:"https://h5.touchieai.com/character?code=8b5e3f5a-b267-4d6e-82cc-9c6f1d6e5fdd",image:"/assets/work/蛋塔今天也想談戀愛_屈子驍.webp"},
+    {title:"陌騫予",hashtags:["劇情","多元互動方式"],url:"https://h5.touchieai.com/character?code=61ee33d9-adb5-4370-a5a7-71ce29630535",image:"/assets/work/蛋塔今天也想談戀愛_陌騫予.webp"},
+  ],
+}
+zhaitangCreators[9]={
+  ...zhaitangCreators[9],
+  discordUrl:"https://discord.gg/7aEEpcx6",
+  profileUrl:"https://h5.touchieai.com/author?code=6b3de2a2-0a30-4c3c-bffa-565434a07ce5",
+  otherLinks:[{label:"CRUSH",url:"https://creators.passion.xyz/tyby_0309"}],
+  recommendedWorks:[
+    {title:"許墨",hashtags:["追妻火葬場","虐戀"],url:"https://h5.touchieai.com/character?code=68e16589-41e7-41bf-b968-9a012cc78765",image:"/assets/work/なな｜菜菜＿許墨.webp"},
+    {title:"顧承野",hashtags:["瘋批","虐戀"],url:"https://h5.touchieai.com/character?code=8a9188ed-1107-4b7b-bd30-43039b2b0440",image:"/assets/work/なな｜菜菜＿顧承野.webp"},
+    {title:"林柊晟",hashtags:["追妻火葬場","瘋批"],url:"https://h5.touchieai.com/character?code=4007bbfd-cd17-4423-86f9-59a691a8d9eb",image:"/assets/work/なな｜菜菜＿林柊晟.webp"},
+  ],
+}
 friendshipCreators[0]={
   ...friendshipCreators[0],
   discordUrl:"https://discord.gg/5Q94M7Gtua",

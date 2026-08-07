@@ -10,22 +10,27 @@ const FALLBACK_IMAGE = "/images/image-fallback.svg"
  * place, so an image request can never prevent the surrounding page from
  * rendering or remaining interactive.
  */
+type AppImageProps = ImageProps & { fallbackSrc?: ImageProps["src"] }
+
 export default function AppImage({
   src,
+  fallbackSrc,
   alt,
   onError,
   onContextMenu,
   onDragStart,
   ...props
-}: ImageProps) {
+}: AppImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src)
   const [usingFallback, setUsingFallback] = useState(false)
   const [triedAlternateFormat, setTriedAlternateFormat] = useState(false)
+  const [triedProvidedFallback, setTriedProvidedFallback] = useState(false)
 
   useEffect(() => {
     setCurrentSrc(src)
     setUsingFallback(false)
     setTriedAlternateFormat(false)
+    setTriedProvidedFallback(false)
   }, [src])
 
   const handleError = (event: SyntheticEvent<HTMLImageElement, Event>) => {
@@ -33,6 +38,11 @@ export default function AppImage({
     if (!triedAlternateFormat && typeof currentSrc === "string" && /\.(webp|gif)(?=$|\?)/i.test(currentSrc)) {
       setTriedAlternateFormat(true)
       setCurrentSrc(currentSrc.replace(/\.(webp|gif)(?=$|\?)/i, extension => extension.toLowerCase() === ".webp" ? ".gif" : ".webp"))
+      return
+    }
+    if (!triedProvidedFallback && fallbackSrc) {
+      setTriedProvidedFallback(true)
+      setCurrentSrc(fallbackSrc)
       return
     }
     if (!usingFallback) {

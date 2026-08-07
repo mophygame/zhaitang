@@ -6,7 +6,7 @@
   "engines": { "node": ">=22.13.0" },
   "scripts": {
     "dev": "node scripts/sync-creator-assets.mjs && next dev -p 3000",
-    "build": "node scripts/sync-creator-assets.mjs && next build --webpack && node scripts/create-min-assets.mjs",
+    "build": "node scripts/sync-creator-assets.mjs && next build --webpack && node scripts/sync-creator-assets.mjs --output && node scripts/create-min-assets.mjs",
     "prod": "node scripts/serve-static.mjs",
     "lint": "eslint . --ignore-pattern out --ignore-pattern .next",
     "typecheck": "tsc --noEmit"
