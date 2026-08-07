@@ -2,7 +2,8 @@
 
 import Image from "@/components/shared/AppImage"
 import { useEffect, useMemo, useState } from "react"
-import { Volume2, X } from "@/components/shared/Icons"
+import { Phone, X } from "@/components/shared/Icons"
+import { getStaffExtension, usePhoneCall } from "@/components/shared/PhoneCall"
 import { CreatorCard } from "@/components/creators/CreatorCard"
 import { creators, friendshipCreators } from "@/data/creators"
 import type { Creator, StaffMember } from "@/types"
@@ -21,21 +22,23 @@ export function StaffCard({member,onOpen}:{member:StaffMember;onOpen:(member:Sta
 }
 
 export function StaffDetailModal({member,onClose,onOpenCreator}:{member:StaffMember|null;onClose:()=>void;onOpenCreator:(creator:Creator)=>void}) {
-  const [played,setPlayed]=useState(false)
+  const {callExtension}=usePhoneCall()
   if(!member)return null
   const memberCreators=creatorsForStaff(member)
   return <div className="modal-backdrop" onMouseDown={event=>event.currentTarget===event.target&&onClose()}>
     <div className="modal staff-modal" role="dialog" aria-modal="true" aria-label={`${member.name}員工檔案`}>
       <button className="icon-button close" onClick={onClose} aria-label="關閉"><X/></button>
-      <div className="staff-modal-image"><Image src={member.portrait} alt={`${member.name}完整員工檔案`} fill sizes="50vw"/></div>
-      <div className="staff-modal-copy">
-        <p className="kicker">INTERNAL PERSONNEL FILE · {member.employeeNumber}</p>
-        <h2>{member.name}<small>{member.englishName}</small></h2><p>{member.description}</p>
-        <dl><div><dt>職稱</dt><dd>{member.title}</dd></div><div><dt>部門</dt><dd>{member.department}</dd></div><div><dt>外表年齡 / 身高</dt><dd>{member.ageDisplay} / {member.height}</dd></div><div><dt>案件 / 成功率</dt><dd>{member.caseCount} 件 / {member.successRate}%</dd></div></dl>
-        {memberCreators.length>0&&<div className="staff-creator-links"><small>CHARACTER CREATORS / 角色創作者</small><div>{memberCreators.map(creator=><button type="button" key={creator.id} onClick={()=>onOpenCreator(creator)}>{creator.name} ↗</button>)}</div></div>}
-        <div className="chips">{member.specialty.map(specialty=><span key={specialty}>{specialty}</span>)}</div>
-        <aside><b>機密備註</b><p>{member.confidentialNote}</p></aside>
-        <button className="voice" onClick={()=>{setPlayed(true);setTimeout(()=>setPlayed(false),1600)}}><Volume2/> {played?member.quote:"播放語音紀錄"}</button>
+      <div className="staff-modal-scroll">
+        <div className="staff-modal-image"><Image src={member.portrait} alt={`${member.name}完整員工檔案`} fill sizes="50vw"/></div>
+        <div className="staff-modal-copy">
+          <p className="kicker">INTERNAL PERSONNEL FILE · {member.employeeNumber}</p>
+          <h2>{member.name}<small>{member.englishName}</small></h2><p>{member.description}</p>
+          <dl><div><dt>職稱</dt><dd>{member.title}</dd></div><div><dt>部門</dt><dd>{member.department}</dd></div><div><dt>外表年齡 / 身高</dt><dd>{member.ageDisplay} / {member.height}</dd></div><div><dt>案件 / 成功率</dt><dd>{member.caseCount} 件 / {member.successRate}%</dd></div></dl>
+          {memberCreators.length>0&&<div className="staff-creator-links"><small>CHARACTER CREATORS / 角色創作者</small><div>{memberCreators.map(creator=><button type="button" key={creator.id} onClick={()=>onOpenCreator(creator)}>{creator.name} ↗</button>)}</div></div>}
+          <div className="chips">{member.specialty.map(specialty=><span key={specialty}>{specialty}</span>)}</div>
+          <aside><b>機密備註</b><p>{member.confidentialNote}</p></aside>
+          <button className="voice" onClick={()=>callExtension(member.id)}><Phone/> 撥打分機 {getStaffExtension(member.id)}</button>
+        </div>
       </div>
     </div>
   </div>

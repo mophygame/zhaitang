@@ -94,6 +94,8 @@ img,canvas{-webkit-user-drag:none;-webkit-user-select:none;user-select:none}
   border-color: #c5a96c;
 }
 
+.footer-contact{display:grid;justify-items:start;gap:5px}.footer-contact button{padding:3px 0;color:var(--gold);border:0;border-bottom:1px solid currentColor;background:transparent}.footer-contact small{color:#62696d;font-size:9px;letter-spacing:.08em}.footer-contact a{color:#aeb2b4;font-size:12px}
+
 /* 全站互動回饋與共用自適應保護 */
 button:not(:disabled),
 a[href],

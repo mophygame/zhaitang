@@ -1,8 +1,20 @@
 .staff-modal {
+  display: block;
   width: min(1180px, 100%);
   max-width: 1180px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.staff-modal-scroll {
+  display: grid;
   grid-template-columns: minmax(300px, 410px) minmax(0, 1fr);
   align-items: start;
+  max-height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .staff-modal-image {
@@ -161,7 +173,7 @@
 }
 
 @media (max-width: 640px) {
-  .staff-modal {
+  .staff-modal-scroll {
     grid-template-columns: 1fr;
   }
 
