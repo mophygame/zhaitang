@@ -198,3 +198,35 @@ video {
     transform: none;
   }
 }
+
+/* 完整呈現處理前後素材，並確保滑動時兩張圖維持相同尺寸。 */
+.compare {
+  background: #07090a;
+}
+
+.compare img {
+  object-fit: contain;
+}
+
+.compare .before-layer {
+  inset: 0;
+  width: auto;
+  z-index: 2;
+}
+
+.compare .before-layer img {
+  max-width: 100%;
+  filter: saturate(.45) brightness(.68);
+}
+
+.compare > img {
+  z-index: 1;
+}
+
+.compare .divider {
+  z-index: 3;
+}
+
+.compare .label {
+  z-index: 4;
+}

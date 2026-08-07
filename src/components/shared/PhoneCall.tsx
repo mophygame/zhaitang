@@ -106,8 +106,13 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     timers.current.push(second)
   }, [tone])
 
-  const speak = useCallback((text: string) => {
-    if (!("speechSynthesis" in window)) return
+  const speak = useCallback((text: string, onEnd?: () => void) => {
+    const schedule = window.setTimeout.bind(window)
+    if (!("speechSynthesis" in window)) {
+      const fallbackTimer = schedule(() => onEnd?.(), Math.max(900, text.length * 145))
+      timers.current.push(fallbackTimer)
+      return
+    }
     window.speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = "zh-TW"
@@ -117,6 +122,10 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     utterance.voice = voices.find(voice => voice.lang.toLowerCase().startsWith("zh-tw"))
       ?? voices.find(voice => voice.lang.toLowerCase().startsWith("zh"))
       ?? null
+    utterance.onend = () => onEnd?.()
+    utterance.onerror = event => {
+      if (event.error !== "canceled" && event.error !== "interrupted") onEnd?.()
+    }
     window.speechSynthesis.speak(utterance)
   }, [])
 
@@ -154,10 +163,9 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const enterVoicemail = useCallback(() => {
     stopRing()
     setPhase("voicemail")
-    setTranscript(voicemailScript)
-    speak(voicemailScript)
-    const beepTimer = window.setTimeout(() => tone(880, .22, .045), 2600)
-    timers.current.push(beepTimer)
+    const leaveMessagePrompt = "嗶聲之後請留言。"
+    setTranscript(`${voicemailScript}${leaveMessagePrompt}`)
+    speak(voicemailScript, () => speak(leaveMessagePrompt, () => tone(880, .32, .055)))
   }, [speak, stopRing, tone])
 
   const enterAnomaly = useCallback(() => {
@@ -291,7 +299,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
 
   return <PhoneCallContext.Provider value={{callExtension,callMain}}>{children}{open&&<div className="phone-call-backdrop"><section className={`phone-call phone-call-${phase}`} role="dialog" aria-modal="true" aria-labelledby="phone-call-title">
     <p className="phone-call-kicker">ZHAITANG SECURE LINE</p><h2 id="phone-call-title">齋堂房屋不動產</h2>
-    <p className="phone-call-number">{dialedNumber}{extensionInput&&<b>　{extensionInput}</b>}<small>04-2317-0317・網站互動功能・非實際電話號碼</small></p>
+    <p className="phone-call-number">{dialedNumber}{extensionInput&&<b>　{extensionInput}</b>}</p>
     <div className="phone-call-status" aria-live="polite"><i/><strong>{statusText}</strong></div>
     {recipient&&phase!=="voicemail"&&<div className="phone-call-recipient"><span>{getStaffExtension(recipient.id)}</span><h3>{recipient.name}</h3><p>{recipient.title}</p></div>}
     {phase==="voicemail"&&<div className="phone-call-recipient voicemail"><span>{recipient?`${getStaffExtension(recipient.id)} · VOICE MAIL`:"VOICE MAIL"}</span><h3>{recipient?`${recipient.name}｜語音留言`:"語音留言"}</h3><p>情境模擬・不會實際錄音</p></div>}

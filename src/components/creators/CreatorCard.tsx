@@ -2,6 +2,13 @@ import Image from "@/components/shared/AppImage"
 import type { CSSProperties } from "react"
 import type { Creator } from "@/types"
 
+function CreatorWork({work}:{work:Creator["recommendedWorks"][number]}) {
+  const content=<><div><Image src={work.image} alt={`${work.title}作品圖片`} fill sizes="(max-width: 700px) 50vw, 360px" /></div><h3>{work.title}</h3><p>{work.hashtags.map((tag) => `#${tag}`).join(" ")}</p></>
+  return work.url
+    ? <a className="creator-work" href={work.url} target="_blank" rel="noreferrer">{content}</a>
+    : <div className="creator-work">{content}</div>
+}
+
 export function CreatorQuickLinks({ creators }: { creators: Creator[] }) {
   const directory = creators.map((creator) => ({ name: creator.name, creator }))
   const columns = Math.ceil(directory.length / 2)
@@ -68,13 +75,9 @@ export function CreatorCard({ creator, index }: { creator: Creator; index: numbe
           <b>{String(creator.recommendedWorks.length).padStart(2, "0")}</b>
         </div>
         <div className="creator-work-grid">
-          {creator.recommendedWorks.map((work) => (
-            <a className="creator-work" href={work.url} target="_blank" rel="noreferrer" key={work.title}>
-              <div><Image src={work.image} alt={`${work.title}作品圖片`} fill sizes="(max-width: 700px) 50vw, 360px" /></div>
-              <h3>{work.title}</h3>
-              <p>{work.hashtags.map((tag) => `#${tag}`).join(" ")}</p>
-            </a>
-          ))}
+          {creator.recommendedWorks.length>0
+            ? creator.recommendedWorks.map((work) => <CreatorWork work={work} key={work.title}/>)
+            : <p className="creator-work-empty">無</p>}
         </div>
       </div>
     </article>

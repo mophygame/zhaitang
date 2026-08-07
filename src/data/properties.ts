@@ -93,9 +93,13 @@ const caseDetails = [
 
 export const properties:Property[]=records.map((r,i)=>{
   const d=caseDetails[i]
+  const caseNumber=`ZT-${String(49+i).padStart(4,"0")}`
+  const hasHouseAssets=i<6
+  const beforeImage=hasHouseAssets?`/assets/house/${caseNumber}_before.webp`:images.properties[(i+1)%3]
+  const afterImage=hasHouseAssets?`/assets/house/${caseNumber}_after.webp`:images.properties[i%3]
   return {
-  id:`zt-${49+i}`,caseNumber:`ZT-${String(49+i).padStart(4,"0")}`,title:r.title,address:`${r.region}${i+3}號`,region:r.region,propertyType:r.type,price:i===2||i===5?null:13800000+i*1750000,layout:r.layout,area:r.area,age:r.age,floor:r.floor,direction:r.direction,publicFacilities:r.facilities,parking:r.parking,
-  neighborHandling:d.neighbor,anomalyLevel:d.anomaly,status:d.status,handlerId:i%2?"song-tingyan":"dai-chiqing",coverImage:images.properties[i%3],beforeImage:images.properties[(i+1)%3],afterImage:images.properties[i%3],shortDescription:"表面條件良好，但現場紀錄與產權資料存在無法以一般屋況解釋的落差。",incidentSummary:d.summary,
+  id:`zt-${49+i}`,caseNumber,title:r.title,address:`${r.region}${i+3}號`,region:r.region,propertyType:r.type,price:i===2||i===5?null:13800000+i*1750000,layout:r.layout,area:r.area,age:r.age,floor:r.floor,direction:r.direction,publicFacilities:r.facilities,parking:r.parking,
+  neighborHandling:d.neighbor,anomalyLevel:d.anomaly,status:d.status,handlerId:i%2?"song-tingyan":"dai-chiqing",coverImage:afterImage,beforeImage,afterImage,shortDescription:"表面條件良好，但現場紀錄與產權資料存在無法以一般屋況解釋的落差。",incidentSummary:d.summary,
   pollutionBefore:d.metrics[0],pollutionAfter:d.metrics[1],stabilityBefore:d.metrics[2],stabilityAfter:d.metrics[3],spiritualActivityBefore:d.metrics[4],spiritualActivityAfter:d.metrics[5],contractIntegrityBefore:d.metrics[6],contractIntegrityAfter:d.metrics[7],handlingMethod:d.method,sealConsumption:d.seal,finalDetermination:d.final,cautionNote:d.note,
   availableForSale:![2,5].includes(i),tags:[r.type,d.anomaly,i%2?"夜間限制":"已勘查"],completedAt:d.completedAt,timeline:d.timeline,
   handlingStages:[{stage:"案件洽談",staffIds:consultationTeams[i],detail:d.details[0]},{stage:"案件建檔",staffIds:["hua-yu"],detail:d.details[1]},{stage:"現場前期勘查",staffIds:surveyTeams[i],detail:d.details[2]},{stage:"現場異常處置",staffIds:responseTeams[i],detail:d.details[3]},{stage:"資產清點與損耗清算",staffIds:["he-zhishun"],detail:d.details[4]},...(highestRiskCases.has(i)?[{stage:"最高風險現場安全",staffIds:["ming-hao"],detail:"冥濠統籌封鎖線、出入管制、撤離動線與現場人員安全確認。"}]:[]),{stage:"處置覆核",staffIds:["zhu-lan"],detail:d.details[5]},{stage:"最終簽核",staffIds:["wu-wei"],detail:d.details[6]}],

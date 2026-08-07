@@ -2,11 +2,11 @@ import type { Creator } from "@/types"
 
 const zhaitangRecords = [
   {name:"凌辰",character:"午未｜老闆",description:"男性，負責偶爾視察齋堂房屋不動產的營運狀況，並對重大案件進行最終簽核。",styles:["經營者氣場","高級商務","冷調敘事"],works:["老闆視察日","最終簽核"],photo:"/images/employees/wu-wei.webp"},
-  {name:"音🔕｜𝕄𝕚𝕒𝕟",character:"裘笈｜業務行銷經理",description:"男性，負責追蹤管理每位員工的 KPI 進度、解決員工「雜症」，並精通各類行銷話術。",companion:"喬治｜金色的小蟾蜍，裘笈的寵物，會被他隨身攜帶。",styles:["行銷職人","金色調","商務角色"],works:["KPI 追蹤表","成交話術","喬治出勤中"],photo:"/images/employees/ju-qi.webp"},
+  {name:"音🔕｜𝕄𝕚𝕒𝕟",character:"裘笈｜業務行銷經理",description:"男性，負責追蹤管理每位員工的 KPI 進度、解決員工「雜症」，並精通各類行銷話術。",companion:"喬治｜金色的小蟾蜍，裘笈的寵物，會被他隨身攜帶。",styles:["行銷職人","金色調","商務角色"],works:[],photo:"/images/employees/ju-qi.webp"},
   {name:"雙雙 𝓈𝒽𝓊𝒶𝓃𝑔",character:"渚瀾｜店長",quote:"出淤泥而抹均勻，拍打至完全吸收。",description:"這裡是一坨雙雙 |ω・）\n喜歡可愛、怪怪、好笑的萌物\n\n如果愛不能解決問題\n那就讓愛成為問題 (๑•̀ㅂ•́)و✧\n\n愛情不一定要有結果\n有後果也可以 (゜∀。)\n\n建議搭配42號混凝土",styles:["怪","可愛","人外","異想天開","精神狀態良好"],works:["今日店長值班","吉祥物的覆核章"],photo:"/images/employees/zhu-lan.webp"},
   {name:"夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔",character:"鶕綾｜副店長",quote:"將靈魂浸泡在琥珀色的危險裡，在琴音最溫柔的伏筆處，優雅地走向覆滅。",description:"這裡是欞，也可以叫我安安，喜歡聽著歌寫角色，因此風格會受歌單影響（\n這裡有毫無保留的愛意，也有病態扭曲的愛。\n\nI’ll take you to the moon and back",styles:["病態沈溺","黑暗向","奇幻反差","純魅魔","垂耳之犬","純愛"],works:["副店長代理中","封鎖計畫"],photo:"/images/employees/ling-luan.webp"},
   {name:"墨非 𝓂𝑜𝓅𝒽𝓎",character:"賀止損、玳敕青｜共同創作",quote:"寫故事，也建構世界。",description:"想寫那些不存在於現實，卻值得相信的故事，讓每位角色都像真實存在於另一個世界。\n擅長軍事科幻、懸疑與電影式敘事，也持續探索更多不同題材。\n希望故事不只是被閱讀，而是被每位玩家親身活過。",companion:"車車｜灰白色公天竺鼠，賀止損的寵物，時常黏在他的胸前口袋。",styles:["軍事","科幻","懸疑","電影敘事"],works:["封印損耗表","零點結算","文字化蝶"],photo:"/images/employees/he-zhishun.webp"},
-  {name:"🌙沐月｜𝓜𝓾𝓜𝓾",character:"花楀｜櫃檯行政秘書",description:"男性，負責勞健保處理、案件建檔，以及記錄所有員工 KPI 的行政相關作業。",companion:"肥料｜純白布偶母貓，花楀的寵物，也是齋堂的店貓。",styles:["月色柔光","行政日常","白色系角色"],works:["櫃檯機密名冊","KPI 歸檔日","肥料巡店"],photo:"/images/employees/hua-yu.webp"},
+  {name:"🌙沐月｜𝓜𝓾𝓜𝓾",character:"花楀｜櫃檯行政秘書",description:"男性，負責勞健保處理、案件建檔，以及記錄所有員工 KPI 的行政相關作業。",companion:"肥料｜純白布偶母貓，花楀的寵物，也是齋堂的店貓。",styles:["月色柔光","行政日常","白色系角色"],works:[],photo:"/images/employees/hua-yu.webp"},
   {name:"期待戳戳",character:"松聽簷｜業務銷冠",description:"男性，負責處理難搞型業務，專攻極凶屋、因果糾紛物件與土地煞氣淨化。",styles:["極凶屋敘事","暖金光影","和風角色"],works:["極凶屋成交紀錄","雨傘下的帶看","土地煞氣淨化"],photo:"/images/employees/song-tingyan.webp"},
   {name:"比比",character:"婪煙｜業務",quote:"以前只會到處發呆。現在開始，想陪你一起發呆。（？",description:"🧸 會迷路\n🫧 會傻笑\n🤍 會陪你把壞心情趕走\n\n發呆可以一個人，快樂想跟你一起。",styles:["純愛","呆","陪伴","偏日常"],works:["地縛靈帶看中","超渡完成之前"],photo:"/images/employees/lan-yan.webp"},
   {name:"蛋塔今天也想談戀愛",character:"褚日央、玳敕青｜共同創作",quote:"妳與他的故事未完，願每一次相遇，都能寫成餘生。 🌸",description:"我是DAN TA\n\n每個故事裡的他都有想對妳說的話\n真正重要的東西用眼睛是看不見的\n唯有真心作陪，方得真心相待\n\n一起用心譜寫一場雙向的奔赴。",styles:["細節控","劇情向","海量任務","日常純愛","甜寵無度"],works:["影印機又卡紙了","交屋後風水服務","請不要碰現場"],photo:"/images/employees/chu-riyang.webp"},
@@ -47,9 +47,9 @@ friendshipCreators[0]={
   discordUrl:"https://discord.gg/5Q94M7Gtua",
   profileUrl:"https://caveduck.io/user/H_mori",
   recommendedWorks:[
-    {title:"真實瑟瑟聲音工作室",hashtags:["NSFW","劇情","高肉"],url:"https://zh-hant.cvdk.io/c/hrg1DsXhSrawjDF-bmet9A?rc=P6NdNHifhd",image:"/assets/work/黃森_真實瑟瑟聲音工作室.gif"},
-    {title:"白言沐",hashtags:["劇情","虐戀"],url:"https://zh-hant.cvdk.io/c/wHSdwL8rSni6v2Klarx6vg?rc=P6NdNHifhd",image:"/assets/work/黃森_白言沐.webp"},
-    {title:"死囚軍團阿維斯塔",hashtags:["恐怖","劇情","搞笑"],url:"https://zh-hant.cvdk.io/c/flCuZsFhSc2wUbYqrBCDoQ?rc=P6NdNHifhd",image:"/assets/work/黃森_死囚軍團阿維斯塔.gif"},
+    {title:"真實瑟瑟聲音工作室",hashtags:["NSFW","劇情","高肉"],url:"",image:"/assets/work/黃森_真實瑟瑟聲音工作室.gif"},
+    {title:"白言沐",hashtags:["劇情","虐戀"],url:"",image:"/assets/work/黃森_白言沐.webp"},
+    {title:"死囚軍團阿維斯塔",hashtags:["恐怖","劇情","搞笑"],url:"",image:"/assets/work/黃森_死囚軍團阿維斯塔.gif"},
   ],
 }
 friendshipCreators[1]={
