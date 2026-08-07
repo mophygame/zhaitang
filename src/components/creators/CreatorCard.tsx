@@ -35,7 +35,7 @@ export function CreatorCard({ creator, index }: { creator: Creator; index: numbe
         <div className="creator-profile">
           <div className="creator-profile-header">
             <div>
-              <p>{creator.name.includes("、") ? "ARCHIVE COLLABORATORS / 三人共同創作" : "ARCHIVE CONTRIBUTOR"}</p>
+              <p>{creator.name.includes("、") ? "ARCHIVE COLLABORATORS / 共同創作" : "ARCHIVE CONTRIBUTOR"}</p>
               <h2>{creator.name}</h2>
             </div>
             <div className="creator-photo">

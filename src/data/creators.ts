@@ -12,7 +12,7 @@ const records = [
   {name:"比比",character:"婪煙｜業務",description:"男性，負責處理靈體超渡，並協助處理無法自行離開現場的地縛靈。",styles:["靈體敘事","黑白氛圍","都市怪談"],works:["地縛靈帶看中","超渡完成之前"],photo:"/images/employees/lan-yan.webp"},
   {name:"蛋塔今天也想談戀愛",character:"褚日央｜業務",description:"男性，負責管理影印機，以及對已完成淨化處理的房產提供售後風水服務。",styles:["職場日常","風水題材","柔光人像"],works:["影印機又卡紙了","交屋後風水服務"],photo:"/images/employees/chu-riyang.webp"},
   {name:"なな｜菜菜",character:"冥濠｜保全",description:"男性，負責齋堂房屋不動產周圍安全，以及最高風險案件的現場封鎖與人員撤離。",styles:["保全制服","高危現場","電影光影"],works:["夜間巡邏名單","最高風險封鎖線"],photo:"/images/employees/ming-hao.webp"},
-  {name:"墨非 Mophy、蛋塔今天也想談戀愛、EE的E是EMO的E",character:"玳敕青｜業務",description:"由墨非 Mophy、蛋塔今天也想談戀愛與 EE的E是EMO的E 三位創作者共同製作角色合輯。玳敕青為男性，負責物件開發，以及凶宅與異常物件的前期勘查；進入現場後，請勿移動任何未登記物品。",styles:["三人共同創作","墨蝶意象","異常勘查"],works:["文字化蝶","請不要碰現場","未完成交屋"],photo:"/images/employees/dai-chiqing.webp"},
+  {name:"墨非 Mophy、蛋塔今天也想談戀愛",character:"玳敕青｜業務",description:"由墨非 Mophy 與蛋塔今天也想談戀愛兩位創作者共同製作角色合輯。玳敕青為男性，負責物件開發，以及凶宅與異常物件的前期勘查；進入現場後，請勿移動任何未登記物品。",styles:["雙人共同創作","墨蝶意象","異常勘查"],works:["文字化蝶","請不要碰現場","未完成交屋"],photo:"/images/employees/dai-chiqing.webp"},
 ] as const
 
 const workImages=[images.hero,"/images/E99E22B7-706E-4578-BD5D-371FC4059937.webp","/images/98441CCC-B076-4253-B64E-E0B19495FC16.webp","/images/D98D5FBD-00B2-48F7-8552-CF14B207D551.webp"]
