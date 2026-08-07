@@ -14,6 +14,10 @@ const creatorsForStaff=(member:StaffMember)=>creators.filter(creator=>
   creator.zhaitangCharacter.split("｜")[0].split("、").map(name=>name.trim()).includes(member.name)
 )
 
+const staffProfileCard=(member:StaffMember)=>member.name==="松聽簷"
+  ? "/assets/employee-profile/名片_松聽簷.webp"
+  : `/assets/employee-profile/資料卡_${member.name}.webp`
+
 export function StaffCard({member,onOpen}:{member:StaffMember;onOpen:(member:StaffMember)=>void}) {
   return <button id={`staff-${member.id}`} className={`staff-card ${member.id}`} onClick={()=>onOpen(member)}>
     <div className="staff-photo"><Image src={member.portrait} alt={`${member.name}員工肖像`} fill sizes="(max-width: 700px) 100vw, 33vw"/><span className="effect"/></div>
@@ -42,7 +46,7 @@ export function StaffDetailModal({member,onClose,onOpenCreator}:{member:StaffMem
     <div className="modal staff-modal" role="dialog" aria-modal="true" aria-label={`${member.name}員工檔案`}>
       <button className="icon-button close" onClick={onClose} aria-label="關閉"><X/></button>
       <div className="staff-modal-scroll">
-        <div className="staff-modal-image"><Image src={`/assets/employee-profile/資料卡_${member.name}.webp`} fallbackSrc={member.portrait} alt={`${member.name}完整員工資料卡`} fill sizes="50vw"/></div>
+        <div className="staff-modal-image"><Image src={staffProfileCard(member)} fallbackSrc={member.portrait} alt={`${member.name}完整員工資料卡`} fill sizes="50vw"/></div>
         <div className="staff-modal-copy">
           <p className="kicker">INTERNAL PERSONNEL FILE · {member.employeeNumber}</p>
           <h2>{member.name}<small>{member.englishName}</small></h2><p>{member.description}</p>
