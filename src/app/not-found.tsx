@@ -15,7 +15,7 @@ export default function NotFound() {
         src="/assets/error/404.webp"
         alt="404，這個頁面已經超渡了，您所尋找的頁面可能已被淨化。此頁面氣場不穩，已收回淨化。"
         fill
-        priority
+        preload
         sizes="100vw"
       />
       <div className="not-found-vignette" aria-hidden="true" />

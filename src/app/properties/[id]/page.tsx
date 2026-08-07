@@ -26,7 +26,7 @@ export default async function PropertyPage({params}:{params:Promise<{id:string}>
     ["可否出售",p.availableForSale?"可出售":"目前不開放"],["最後處理日期",p.completedAt],
   ]
   return <>
-    <section className="detail-hero"><Image src={p.coverImage} alt={`${p.title}物件主圖`} fill priority sizes="100vw"/><div/><div className="detail-title"><p className="kicker">CASE FILE {p.caseNumber}</p><h1>{p.title}</h1><p>{p.address}</p><div><AnomalyBadge level={p.anomalyLevel}/><StatusBadge status={p.status}/></div><strong>{p.price?`NT$ ${p.price.toLocaleString()}`:"價格面議"}</strong>{night&&<small>目前為夜間時段。請勿單獨前往現場。</small>}</div></section>
+    <section className="detail-hero"><Image src={p.coverImage} alt={`${p.title}物件主圖`} fill preload sizes="100vw"/><div/><div className="detail-title"><p className="kicker">CASE FILE {p.caseNumber}</p><h1>{p.title}</h1><p>{p.address}</p><div><AnomalyBadge level={p.anomalyLevel}/><StatusBadge status={p.status}/></div><strong>{p.price?`NT$ ${p.price.toLocaleString()}`:"價格面議"}</strong>{night&&<small>目前為夜間時段。請勿單獨前往現場。</small>}</div></section>
     <section className="section facts"><SectionTitle eyebrow="PROPERTY RECORD" title="房屋基本資料"/><dl>{facts.map(([key,value])=><div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl></section>
     <section className="section"><SectionTitle eyebrow="VISUAL COMPARISON" title="處理前後對比"/><BeforeAfterSlider before={p.beforeImage} after={p.afterImage}/></section>
     <section className="section record-grid"><div><SectionTitle eyebrow="ANOMALY METRICS" title="異常數據"/><AnomalyMetrics property={p}/></div><div><SectionTitle eyebrow="CASE TIMELINE" title="案件時間線"/><CaseTimeline items={p.timeline}/></div></section>

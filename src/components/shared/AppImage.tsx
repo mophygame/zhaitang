@@ -16,23 +16,28 @@ export default function AppImage({
   src,
   fallbackSrc,
   alt,
+  className,
+  onLoad,
   onError,
   onContextMenu,
   onDragStart,
   ...props
 }: AppImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src)
+  const [isLoading, setIsLoading] = useState(true)
   const [usingFallback, setUsingFallback] = useState(false)
   const [triedProvidedFallback, setTriedProvidedFallback] = useState(false)
 
   useEffect(() => {
     setCurrentSrc(src)
+    setIsLoading(true)
     setUsingFallback(false)
     setTriedProvidedFallback(false)
   }, [src])
 
   const handleError = (event: SyntheticEvent<HTMLImageElement, Event>) => {
     onError?.(event)
+    setIsLoading(true)
     if (!triedProvidedFallback && fallbackSrc) {
       setTriedProvidedFallback(true)
       setCurrentSrc(fallbackSrc)
@@ -49,7 +54,13 @@ export default function AppImage({
       {...props}
       src={currentSrc}
       alt={alt}
+      className={[className,isLoading?"app-image-pending":"app-image-ready"].filter(Boolean).join(" ")}
       unoptimized
+      decoding={props.decoding??"async"}
+      onLoad={(event)=>{
+        setIsLoading(false)
+        onLoad?.(event)
+      }}
       onError={handleError}
       draggable={false}
       onContextMenu={(event) => {
@@ -61,6 +72,7 @@ export default function AppImage({
         onDragStart?.(event)
       }}
       data-image-fallback={usingFallback ? "true" : undefined}
+      data-image-loading={isLoading ? "true" : "false"}
     />
   )
 }

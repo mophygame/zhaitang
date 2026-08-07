@@ -127,18 +127,18 @@ export function CreatorCard({ creator, index }: { creator: Creator; index: numbe
             {creator.profileUrl?<a href={creator.profileUrl} target="_blank" rel="noreferrer">Touchie 作者頁面 ↗</a>:creator.profileLabel?<span className="creator-link-pending">Touchie：{creator.profileLabel}</span>:<span className="creator-link-pending">Touchie 作者頁面待補</span>}
             {creator.otherLinks?.map(link=><a href={link.url} target="_blank" rel="noreferrer" key={link.label}>{link.label} ↗</a>)}
           </div>
-          <div className="creator-works">
-            <div className="creator-works-heading">
-              <span>作品介紹</span>
-              <b>{String(creator.recommendedWorks.length).padStart(2, "0")}</b>
-            </div>
-            <div className="creator-work-grid">
-              {creator.recommendedWorks.length>0
-                ? creator.recommendedWorks.map(work=><CreatorWork work={work} key={work.title}/>)
-                : <p className="creator-work-empty">無</p>}
-            </div>
-          </div>
         </div>
+        <aside className="creator-works creator-works-side">
+          <div className="creator-works-heading">
+            <span>作品介紹</span>
+            <b>{String(creator.recommendedWorks.length).padStart(2, "0")}</b>
+          </div>
+          <div className="creator-work-grid">
+            {creator.recommendedWorks.length>0
+              ? creator.recommendedWorks.map(work=><CreatorWork work={work} key={work.title}/>)
+              : <p className="creator-work-empty">無</p>}
+          </div>
+        </aside>
       </div>
     </article>
   )
