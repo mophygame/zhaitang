@@ -1,6 +1,7 @@
 .staff-modal {
-  width: min(1000px, 100%);
-  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  width: min(1180px, 100%);
+  max-width: 1180px;
+  grid-template-columns: minmax(300px, 410px) minmax(0, 1fr);
   align-items: start;
 }
 
@@ -18,6 +19,147 @@
   object-fit: cover;
 }
 
+.staff-creator-links {
+  margin: 18px 0 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.staff-creator-links > small {
+  color: var(--mist);
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+
+.staff-creator-links > div,
+.friendship-thanks > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.staff-creator-links button,
+.friendship-thanks button {
+  cursor: pointer;
+  padding: 8px 12px;
+  color: #d8d3c7;
+  border: 1px solid var(--gold);
+  background: #15191d;
+  font-size: 11px;
+  transition: background .25s, color .25s;
+}
+
+.staff-creator-links button:hover,
+.friendship-thanks button:hover {
+  color: #0b0d0f;
+  background: var(--gold);
+}
+
+.staff-creator-links > div {
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.staff-creator-links button {
+  padding: 0 0 2px;
+  color: var(--gold);
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  font-size: 13px;
+  letter-spacing: .03em;
+}
+
+.staff-creator-links button:hover {
+  color: #d8d3c7;
+  background: transparent;
+}
+
+.friendship-thanks button {
+  padding: 0 0 2px;
+  color: var(--gold);
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  font-size: 13px;
+  letter-spacing: .03em;
+}
+
+.friendship-thanks button:hover {
+  color: var(--ivory);
+  background: transparent;
+}
+
+.friendship-thanks {
+  margin-top: 100px;
+  padding: clamp(28px, 5vw, 54px);
+  border: 1px solid var(--line);
+  background: radial-gradient(circle at 85% 20%, rgba(181,154,98,.13), transparent 36%), #111517;
+}
+
+.friendship-thanks h2 {
+  margin: 8px 0;
+  font-size: clamp(30px, 4vw, 48px);
+}
+
+.friendship-thanks > p:not(.kicker) {
+  max-width: 680px;
+  color: var(--mist);
+}
+
+.friendship-thanks .friendship-invitation {
+  margin: 28px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.creator-detail-backdrop {
+  z-index: 150;
+  overflow: hidden;
+  align-items: center;
+}
+
+.creator-detail-modal {
+  position: relative;
+  width: min(1120px, 100%);
+  max-height: calc(100dvh - 40px);
+  margin: 0 auto;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.creator-detail-scroll {
+  max-height: inherit;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.creator-detail-modal .creator-card {
+  transform: none;
+  border-color: var(--gold);
+  box-shadow: 0 30px 100px #000;
+}
+
+.creator-detail-close {
+  position: absolute;
+  z-index: 20;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+  color: var(--ivory);
+  border: 1px solid var(--gold);
+  background: rgba(8,10,11,.9);
+}
+
 @media (max-width: 640px) {
   .staff-modal {
     grid-template-columns: 1fr;
@@ -27,5 +169,19 @@
     width: min(100%, 360px);
     min-height: 0;
     justify-self: center;
+  }
+
+  .friendship-thanks {
+    margin-top: 65px;
+    padding: 25px 20px;
+  }
+
+  .creator-detail-backdrop {
+    padding: 8px;
+  }
+
+  .creator-detail-modal {
+    max-height: calc(100dvh - 16px);
+    margin: 0 auto;
   }
 }

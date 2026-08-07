@@ -32,7 +32,7 @@ export default async function PropertyPage({params}:{params:Promise<{id:string}>
     <section className="section"><SectionTitle eyebrow="VISUAL COMPARISON" title="處理前後對比"/><BeforeAfterSlider before={p.beforeImage} after={p.afterImage}/></section>
     <section className="section record-grid"><div><SectionTitle eyebrow="ANOMALY METRICS" title="異常數據"/><AnomalyMetrics property={p}/></div><div><SectionTitle eyebrow="CASE TIMELINE" title="案件時間線"/><CaseTimeline items={p.timeline}/></div></section>
     <section className="section report-section"><SectionTitle eyebrow="FINAL DISPOSITION" title="處理紀錄"/><div className="report-paper">
-      <h3>階段與負責人</h3><div className="handling-stages">{p.handlingStages.map(item=>{const members=item.staffIds.map(getStaff).filter(member=>member!==undefined);return <article key={item.stage}><span>{item.stage}</span><strong>{members.length?members.map(member=>`${member.name} · ${member.title}`).join("、"):"未登記"}</strong><p>{item.detail}</p></article>})}</div>
+      <h3>階段與負責人</h3><div className="handling-stages">{p.handlingStages.map(item=>{const members=item.staffIds.map(getStaff).filter(member=>member!==undefined);return <article key={item.stage}><span>{item.stage}</span><strong>{members.length?members.map(member=>member.name).join("、"):"未登記"}</strong><p>{item.detail}</p></article>})}</div>
       <h3>附近鄰居處理情況</h3><p>{p.neighborHandling}</p>
       <dl><div><dt>使用方式</dt><dd>文字封緘、產權切離</dd></div><div><dt>封印消耗</dt><dd>金箔線 18.4 m、黑墨 3 罐</dd></div></dl>
       <h3>異常來源</h3><p>{p.incidentSummary}</p><h3>最終判定</h3><p>{p.availableForSale?"非主動攻擊型殘留，已完成剝離，可轉入銷售程序。":"異常尚未符合解除條件，維持封鎖並持續監測。"}</p><aside>附註：未經案件負責人確認，請勿於凌晨 03:17 開啟任何封閉櫃體。</aside>

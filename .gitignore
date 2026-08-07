@@ -5,6 +5,8 @@ node_modules/
 # Generated builds and caches
 dist/
 .next/
+out/
+public/assets/
 *.tsbuildinfo
 
 # Cloudflare local state and logs

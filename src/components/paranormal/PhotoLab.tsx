@@ -9,9 +9,36 @@ import {
   Upload,
 } from "@/components/shared/Icons"
 import { GoldButton, useCommission } from "@/components/shared/UI"
+import {
+  pickSupernaturalAsset,
+  type DetectionModeId,
+} from "@/data/supernaturalAssets"
+import { pickDetectionOutcome } from "@/data/detectionOutcomes"
 import type { DetectionResult } from "@/types"
 
-const spiritAsset = "/images/effects/cute-spirit-v2.png"
+const detectionModes = [
+  {
+    id: "基礎靈異檢測",
+    number: "01",
+    description: "確認影像中是否存在低度異常殘留。",
+  },
+  {
+    id: "異常存在檢測",
+    number: "02",
+    description: "辨識拍攝當下未登記於現場之存在。",
+  },
+  {
+    id: "空間污染檢測",
+    number: "03",
+    description: "分析墨跡、視線、陰影及環境異常。",
+  },
+  {
+    id: "深度顯影",
+    number: "04",
+    description: "提高影像顯影強度。部分結果可能超出原始拍攝內容。",
+    warning: "⚠ 建議膽大者使用",
+  },
+] as const
 
 export function PhotoUploader({
   url,
@@ -41,7 +68,14 @@ export function PhotoUploader({
     >
       {url ? (
         <>
-          <img src={url} alt="待檢測照片預覽" />
+          <span className="source-image-label">原始影像／尚未套用檢測效果</span>
+          <img
+            src={url}
+            alt="待檢測照片預覽"
+            draggable={false}
+            onContextMenu={(event) => event.preventDefault()}
+            onDragStart={(event) => event.preventDefault()}
+          />
           <button onClick={onRemove} aria-label="移除照片">
             <Trash2 /> 移除
           </button>
@@ -99,79 +133,193 @@ export function PhotoEffectCanvas({
     photo.onload = () => {
       canvas.width = photo.naturalWidth
       canvas.height = photo.naturalHeight
-      context?.drawImage(photo, 0, 0)
       if (!context) return
 
       const width = canvas.width
       const height = canvas.height
+      const unit = Math.max(1, Math.min(width, height) / 900)
 
-      context.strokeStyle = result.isAnomalous ? "#7b2626" : "#b59a62"
-      context.lineWidth = Math.max(2, width / 500)
-      context.strokeRect(width * 0.08, height * 0.08, width * 0.84, height * 0.84)
+      // Start from the untouched upload, then apply restrained forensic grading.
+      context.drawImage(photo, 0, 0)
+      const grade = context.createLinearGradient(0, 0, width, height)
+      grade.addColorStop(0, "rgba(20,38,45,.12)")
+      grade.addColorStop(.55, "rgba(7,13,17,.03)")
+      grade.addColorStop(1, "rgba(34,24,18,.11)")
+      context.fillStyle = grade
+      context.fillRect(0, 0, width, height)
+
+      const drawVignette = (strength: number) => {
+        const vignette = context.createRadialGradient(
+          width / 2,
+          height / 2,
+          Math.min(width, height) * .18,
+          width / 2,
+          height / 2,
+          Math.max(width, height) * .7,
+        )
+        vignette.addColorStop(.52, "rgba(2,5,7,0)")
+        vignette.addColorStop(1, `rgba(2,5,7,${strength})`)
+        context.fillStyle = vignette
+        context.fillRect(0, 0, width, height)
+      }
+
+      const drawFineGrain = () => {
+        let seed = Number(result.caseNumber.replace(/\D/g, "")) || 17
+        const random = () => {
+          seed = (seed * 1664525 + 1013904223) % 4294967296
+          return seed / 4294967296
+        }
+        context.save()
+        context.fillStyle = "rgba(226,232,226,.12)"
+        for (let index = 0; index < 720; index += 1) {
+          const grainSize = random() > .88 ? 1.5 * unit : .65 * unit
+          context.globalAlpha = .025 + random() * .055
+          context.fillRect(random() * width, random() * height, grainSize, grainSize)
+        }
+        context.restore()
+      }
+
+      const drawCornerBrackets = (x: number, y: number, boxWidth: number, boxHeight: number) => {
+        const length = Math.min(boxWidth, boxHeight) * .2
+        context.save()
+        context.strokeStyle = mode.includes("深度") ? "rgba(181,154,98,.76)" : "rgba(139,55,55,.72)"
+        context.lineWidth = Math.max(1.2, 1.2 * unit)
+        context.setLineDash([])
+        ;[
+          [x + length, y, x, y, x, y + length],
+          [x + boxWidth - length, y, x + boxWidth, y, x + boxWidth, y + length],
+          [x, y + boxHeight - length, x, y + boxHeight, x + length, y + boxHeight],
+          [x + boxWidth - length, y + boxHeight, x + boxWidth, y + boxHeight, x + boxWidth, y + boxHeight - length],
+        ].forEach((points) => {
+          context.beginPath()
+          context.moveTo(points[0], points[1])
+          context.lineTo(points[2], points[3])
+          context.lineTo(points[4], points[5])
+          context.stroke()
+        })
+        context.restore()
+      }
 
       const drawRecordMark = () => {
-        context.fillStyle = "rgba(234,229,218,.82)"
-        context.font = `${Math.max(16, width / 48)}px monospace`
-        context.fillText(
-          result.isAnomalous
-            ? `ZHAITANG / ${mode} / UNREGISTERED`
-            : "ZHAITANG / NO ANOMALY DETECTED",
-          width * 0.1,
-          height * 0.92,
-        )
+        const fontSize = Math.max(12, width / 62)
+        const text = result.isAnomalous
+          ? `ZHAITANG  ${result.caseNumber}  /  UNREGISTERED`
+          : `ZHAITANG  ${result.caseNumber}  /  CLEAR`
+        context.save()
+        context.font = `500 ${fontSize}px monospace`
+        const textWidth = context.measureText(text).width
+        const plateX = width * .055
+        const plateY = height * .9
+        context.fillStyle = "rgba(5,9,11,.72)"
+        context.fillRect(plateX - 10 * unit, plateY - fontSize * 1.25, textWidth + 20 * unit, fontSize * 1.8)
+        context.fillStyle = result.isAnomalous ? "rgba(219,205,172,.9)" : "rgba(205,214,210,.88)"
+        context.fillText(text, plateX, plateY)
+        context.restore()
       }
 
       if (!result.isAnomalous || !result.effect) {
+        drawVignette(.25)
+        drawFineGrain()
         drawRecordMark()
         return
       }
 
-      context.fillStyle = "rgba(4,8,10,.12)"
-      context.fillRect(0, 0, width, height)
+      const effect = result.effect
+      const anchorX = width * effect.x
+      const anchorY = height * effect.y
 
-      if (mode.includes("墨蝶")) {
-        context.fillStyle = "rgba(5,5,5,.48)"
-        context.font = `${Math.max(18, width / 34)}px serif`
-        ;["蝶", "契", "留"].forEach((text, index) => {
-          context.fillText(text, width * (0.12 + index * 0.16), height * (0.2 + (index % 2) * 0.2))
+      if (mode.includes("基礎")) {
+        const glow = context.createRadialGradient(
+          anchorX,
+          anchorY,
+          0,
+          anchorX,
+          anchorY,
+          Math.min(width, height) * .24,
+        )
+        glow.addColorStop(0, "rgba(164,207,215,.16)")
+        glow.addColorStop(.45, "rgba(111,151,159,.07)")
+        glow.addColorStop(1, "rgba(174,209,214,0)")
+        context.fillStyle = glow
+        context.fillRect(0, 0, width, height)
+      }
+
+      if (mode.includes("空間污染")) {
+        // Layer several translucent blooms instead of drawing obvious symbols.
+        ;[
+          [anchorX, anchorY, .2],
+          [width * (effect.x + .12), height * (effect.y + .08), .13],
+          [width * (effect.x - .07), height * (effect.y + .2), .1],
+        ].forEach(([x, y, radius], index) => {
+          const bloom = context.createRadialGradient(x, y, 0, x, y, Math.min(width, height) * radius)
+          bloom.addColorStop(0, `rgba(3,6,7,${.22 - index * .035})`)
+          bloom.addColorStop(.5, `rgba(8,13,14,${.11 - index * .018})`)
+          bloom.addColorStop(1, "rgba(8,13,14,0)")
+          context.fillStyle = bloom
+          context.fillRect(0, 0, width, height)
         })
       }
 
-      if (mode.includes("員工")) {
-        context.strokeStyle = "rgba(181,154,98,.54)"
-        for (let index = 0; index < 5; index += 1) {
-          context.beginPath()
-          context.moveTo(width * 0.05, height * (0.18 + index * 0.12))
-          context.lineTo(width * (0.62 + index * 0.04), height * (0.08 + index * 0.13))
-          context.stroke()
+      if (mode.includes("深度顯影")) {
+        context.fillStyle = "rgba(3,7,10,.15)"
+        context.fillRect(0, 0, width, height)
+        context.fillStyle = "rgba(201,190,157,.035)"
+        const scanGap = Math.max(4, Math.round(6 * unit))
+        for (let y = 0; y < height; y += scanGap) {
+          context.fillRect(0, y, width, Math.max(1, unit * .45))
         }
       }
 
       const spirit = new Image()
       spirit.onload = () => {
         if (!result.effect) return
-        const size = Math.min(width, height) * result.effect.scale
+        const size = Math.min(width, height) * effect.scale
         const ratio = spirit.naturalHeight / spirit.naturalWidth
         const drawWidth = size
         const drawHeight = size * ratio
-        const centerX = width * result.effect.x + drawWidth / 2
-        const centerY = height * result.effect.y + drawHeight / 2
+        const centerX = anchorX + drawWidth / 2
+        const centerY = anchorY + drawHeight / 2
+
+        // Diffused silhouette integrates the subject into the photographed light.
+        context.save()
+        context.globalAlpha = effect.opacity * .55
+        context.filter = `blur(${Math.max(5, 8 * unit)}px) saturate(.45) brightness(.7)`
+        context.translate(centerX, centerY)
+        context.rotate(effect.rotation)
+        context.drawImage(spirit, -drawWidth * .53, -drawHeight * .51, drawWidth * 1.06, drawHeight * 1.06)
+        context.restore()
+
+        if (mode.includes("深度顯影")) {
+          context.save()
+          context.globalCompositeOperation = "screen"
+          context.globalAlpha = effect.opacity * .14
+          context.filter = "hue-rotate(155deg) saturate(1.8)"
+          context.drawImage(spirit, anchorX - 3 * unit, anchorY, drawWidth, drawHeight)
+          context.filter = "hue-rotate(325deg) saturate(1.4)"
+          context.drawImage(spirit, anchorX + 3 * unit, anchorY, drawWidth, drawHeight)
+          context.restore()
+        }
 
         context.save()
-        context.globalAlpha = result.effect.opacity
+        context.globalAlpha = effect.opacity
+        context.filter = mode.includes("基礎")
+          ? "grayscale(.2) saturate(.72) contrast(.94)"
+          : "grayscale(.42) saturate(.55) contrast(1.05)"
         context.translate(centerX, centerY)
-        context.rotate(result.effect.rotation)
+        context.rotate(effect.rotation)
         context.drawImage(spirit, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight)
         context.restore()
 
-        if (mode.includes("視線") || mode.includes("隨機")) {
-          context.strokeStyle = "rgba(123,38,38,.62)"
-          context.strokeRect(width * result.effect.x, height * result.effect.y, drawWidth, drawHeight)
+        if (mode.includes("異常存在") || mode.includes("深度顯影")) {
+          drawCornerBrackets(anchorX, anchorY, drawWidth, drawHeight)
         }
 
+        drawVignette(mode.includes("深度") ? .52 : .38)
+        drawFineGrain()
         drawRecordMark()
       }
-      spirit.src = spiritAsset
+      spirit.onerror = drawRecordMark
+      spirit.src = result.effect.assetPath
     }
     photo.src = url
   }, [canvasRef, mode, result, url])
@@ -181,6 +329,9 @@ export function PhotoEffectCanvas({
       ref={canvasRef}
       className="effect-canvas"
       aria-label={result.isAnomalous ? "發現異常的影像檢測結果" : "未發現異常的影像檢測結果"}
+      draggable={false}
+      onContextMenu={(event) => event.preventDefault()}
+      onDragStart={(event) => event.preventDefault()}
     />
   )
 }
@@ -215,53 +366,71 @@ export function DetectionReport({ result }: { result: DetectionResult }) {
 
 export function PhotoLab() {
   const [url, setUrl] = useState("")
-  const [mode, setMode] = useState("隨機異常")
+  const [mode, setMode] = useState<DetectionModeId>("基礎靈異檢測")
   const [scanning, setScanning] = useState(false)
   const [result, setResult] = useState<DetectionResult | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const detectionOutputRef = useRef<HTMLDivElement>(null)
+  const scanRunRef = useRef(0)
   const commission = useCommission()
+  const completedResult = scanning ? null : result
+
+  useEffect(() => () => {
+    scanRunRef.current += 1
+  }, [])
+
+  const clearDetection = () => {
+    scanRunRef.current += 1
+    setScanning(false)
+    setResult(null)
+  }
 
   const upload = (file: File) => {
+    clearDetection()
     if (url) URL.revokeObjectURL(url)
     setUrl(URL.createObjectURL(file))
-    setResult(null)
   }
 
   const scan = () => {
     if (!url) return
+    const scanRun = scanRunRef.current + 1
+    scanRunRef.current = scanRun
     setScanning(true)
     setResult(null)
+    requestAnimationFrame(() => {
+      detectionOutputRef.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      })
+    })
 
     setTimeout(() => {
-      const anomalyChance = mode === "隨機異常" ? 0.62 : 0.76
-      const isAnomalous = Math.random() < anomalyChance
-      const pollution = isAnomalous
-        ? 48 + Math.floor(Math.random() * 48)
-        : 2 + Math.floor(Math.random() * 16)
+      if (scanRunRef.current !== scanRun) return
+      const outcome = pickDetectionOutcome(mode)
+      const isAnomalous = outcome.isAnomalous
+      const pollutionRange = outcome.severity === "high"
+        ? [76, 96]
+        : outcome.severity === "medium"
+          ? [48, 78]
+          : outcome.severity === "low"
+            ? [20, 49]
+            : [2, 18]
+      const pollution = pollutionRange[0] + Math.floor(Math.random() * (pollutionRange[1] - pollutionRange[0] + 1))
 
       setResult({
         caseNumber: `AUTO-${Math.floor(100000 + Math.random() * 899999)}`,
         isAnomalous,
         pollution,
-        gazes: isAnomalous ? 1 + Math.floor(Math.random() * 3) : 0,
-        entities: isAnomalous ? 1 : 0,
-        ink: isAnomalous ? (pollution > 74 ? "高度" : "低度") : "未檢出",
+        gazes: !isAnomalous ? 0 : outcome.severity === "high" ? 2 + Math.floor(Math.random() * 3) : 1 + Math.floor(Math.random() * 2),
+        entities: !isAnomalous ? 0 : outcome.severity === "high" ? 1 + Math.floor(Math.random() * 2) : 1,
+        ink: !isAnomalous ? "未檢出" : outcome.severity === "high" ? "高度" : outcome.severity === "medium" ? "中度" : "低度",
         stability: isAnomalous
           ? Math.max(8, 100 - pollution + Math.floor(Math.random() * 9))
           : 88 + Math.floor(Math.random() * 12),
-        verdict: isAnomalous
-          ? [
-              "影像角落發現一處非登記存在。牠看起來暫時沒有惡意。",
-              "發現微弱靈體殘留。請勿在相同位置連續拍攝三次。",
-              "影像中存在一處無法辨識的視線來源，建議由齋堂複檢。",
-            ][Math.floor(Math.random() * 3)]
-          : [
-              "目前未發現異常，影像與登記存在數量一致。",
-              "空間狀態穩定。仍不建議於凌晨重新拍攝。",
-              "本次檢測結果正常，未發現需要處理的影像殘留。",
-            ][Math.floor(Math.random() * 3)],
+        verdict: outcome.verdict,
         effect: isAnomalous
           ? {
+              assetPath: pickSupernaturalAsset(mode),
               x: 0.08 + Math.random() * 0.64,
               y: 0.08 + Math.random() * 0.48,
               scale: 0.13 + Math.random() * 0.18,
@@ -293,22 +462,30 @@ export function PhotoLab() {
         url={url}
         onSelect={upload}
         onRemove={() => {
+          clearDetection()
+          if (url) URL.revokeObjectURL(url)
           setUrl("")
-          setResult(null)
         }}
       />
       <div className="mode-panel">
         <p className="kicker">DETECTION MODE</p>
         <h3>選擇檢測模式</h3>
-        {["墨蝶殘留", "背後視線", "空間污染", "齋堂員工介入", "隨機異常"].map((item) => (
-          <label key={item}>
+        {detectionModes.map((item) => (
+          <label key={item.id}>
             <input
               type="radio"
               name="mode"
-              checked={mode === item}
-              onChange={() => setMode(item)}
+              checked={mode === item.id}
+              onChange={() => {
+                clearDetection()
+                setMode(item.id as DetectionModeId)
+              }}
             />
-            <span>{item}</span>
+            <span>
+              <strong>{item.number}｜{item.id}</strong>
+              {"warning" in item && <em>{item.warning}</em>}
+              <small>「{item.description}」</small>
+            </span>
           </label>
         ))}
         <GoldButton onClick={scan} className={!url ? "disabled" : ""}>
@@ -318,16 +495,17 @@ export function PhotoLab() {
           每次結果皆可能不同。上傳之影像僅在目前瀏覽器中處理，不會儲存或傳送至齋堂伺服器。
         </p>
       </div>
+      <div ref={detectionOutputRef} className="detection-output-anchor" aria-hidden="true" />
       {scanning && <ScanAnimation />}
-      {result && (
-        <div className="result">
+      {completedResult && (
+        <div className="result" key={completedResult.caseNumber}>
           <PhotoEffectCanvas
             url={url}
             mode={mode}
-            result={result}
+            result={completedResult}
             canvasRef={canvasRef}
           />
-          <DetectionReport result={result} />
+          <DetectionReport result={completedResult} />
           <div className="result-actions">
             <button onClick={download}>
               <Download />下載檢測結果
@@ -337,8 +515,9 @@ export function PhotoLab() {
             </button>
             <button
               onClick={() => {
+                clearDetection()
+                if (url) URL.revokeObjectURL(url)
                 setUrl("")
-                setResult(null)
               }}
             >
               <RotateCcw />重新上傳
