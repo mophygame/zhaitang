@@ -94,7 +94,7 @@ const caseDetails = [
 export const properties:Property[]=records.map((r,i)=>{
   const d=caseDetails[i]
   const caseNumber=`ZT-${String(49+i).padStart(4,"0")}`
-  const hasHouseAssets=i<6
+  const hasHouseAssets=i<8
   const beforeImage=hasHouseAssets?`/assets/house/${caseNumber}_before.webp`:images.properties[(i+1)%3]
   const afterImage=hasHouseAssets?`/assets/house/${caseNumber}_after.webp`:images.properties[i%3]
   return {

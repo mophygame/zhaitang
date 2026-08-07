@@ -53,8 +53,7 @@ zhaitangCreators[0]={
 zhaitangCreators[1]={
   ...zhaitangCreators[1],
   discordUrl:"https://discord.gg/mumain",
-  profileUrl:"",
-  profileLabel:"無",
+  profileUrl:"https://h5.touchieai.com/author?code=b7fc55b7-2132-4d36-9091-2c91a18e65bf",
   otherLinks:[],
   recommendedWorks:[],
 }
@@ -62,7 +61,7 @@ zhaitangCreators[2]={
   ...zhaitangCreators[2],
   discordUrl:"",
   discordLabel:"雙(゜∀。)／twinko.22",
-  profileUrl:"",
+  profileUrl:"https://h5.touchieai.com/author?code=5470e764-c03a-44dc-9ddb-1b4a3e406ff2",
   profileLabel:"貓堆中的雙💚／QQG30U",
   otherLinks:[
     {label:"Instagram",url:"https://www.instagram.com/twinko_22?igsh=MTJxeWVvMmY2bTl2bg=="},
@@ -77,7 +76,7 @@ zhaitangCreators[3]={
   ...zhaitangCreators[3],
   discordUrl:"",
   discordLabel:"an1lpd_ling",
-  profileUrl:"",
+  profileUrl:"https://h5.touchieai.com/author?code=651d6158-f3e0-4f92-b374-7acdd824d370",
   profileLabel:"夜欞Ling.",
   otherLinks:[],
   recommendedWorks:[
@@ -88,8 +87,9 @@ zhaitangCreators[3]={
 }
 zhaitangCreators[4]={
   ...zhaitangCreators[4],
-  discordUrl:"https://discord.gg/mumain",
-  profileUrl:"",
+  discordUrl:"",
+  discordLabel:"iammophy",
+  profileUrl:"https://h5.touchieai.com/author?code=83980f9d-f3ec-4b54-982f-f0e6314461d5",
   profileLabel:"0MAH9V",
   otherLinks:[],
   recommendedWorks:[
@@ -114,7 +114,8 @@ zhaitangCreators[6]={
 }
 zhaitangCreators[7]={
   ...zhaitangCreators[7],
-  discordUrl:"https://discord.gg/UVT8SMY2",
+  discordUrl:"",
+  discordLabel:".bibi0717_",
   profileUrl:"https://h5.touchieai.com/author?code=a5fe3165-bfc3-4f19-a0bd-d107816307d2",
   otherLinks:[],
   recommendedWorks:[
@@ -127,7 +128,7 @@ zhaitangCreators[8]={
   ...zhaitangCreators[8],
   discordUrl:"",
   discordLabel:"nikoyo6548",
-  profileUrl:"",
+  profileUrl:"https://h5.touchieai.com/author?code=7a530f22-07b6-434a-b8ca-e51efe1becba",
   otherLinks:[],
   recommendedWorks:[
     {title:"《偏向虎山行》顧行之",hashtags:["劇情","沉浸式"],url:"https://h5.touchieai.com/character?code=30018d40-3f54-4727-a441-cdb0fdf97eb8",image:"/assets/work/蛋塔今天也想談戀愛_《偏向虎山行》顧行之.webp"},
