@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[1849,["395","static/chunks/app/paranormal-photo/page-567f5774813d1704.js"],"PhotoLab"]
+3:I[484,[],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[[["$","section",null,{"className":"page-hero paranormal-hero","children":[["$","p",null,{"className":"kicker","children":"PUBLIC EXPERIMENT / LOCAL PROCESSING ONLY"}],["$","h1",null,{"children":"靈異影像檢測"}],["$","h2",null,{"children":"你確定照片裡只有你嗎？"}],["$","p",null,{"children":"上傳一張照片。齋堂將分析影像中的異常視線、殘留墨跡、未登記存在與空間污染。"}]]}],["$","section",null,{"className":"section","children":["$","$L2",null,{}]}]],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"6vSb979E1pi6d9ZdCdGFW"}
+5:null

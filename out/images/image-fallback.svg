@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">齋堂房屋圖片備援</title>
+  <desc id="desc">原始圖片暫時無法載入</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0b0d0f"/>
+      <stop offset="1" stop-color="#242a2f"/>
+    </linearGradient>
+    <radialGradient id="mist">
+      <stop stop-color="#b59a62" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#b59a62" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <circle cx="800" cy="450" r="430" fill="url(#mist)"/>
+  <g fill="none" stroke="#b59a62" stroke-width="5" opacity=".72">
+    <path d="M500 578V390l300-184 300 184v188M565 578V426l235-142 235 142v152"/>
+    <path d="M475 578h650M675 578V422h250v156M745 578V468h110v110"/>
+    <path d="M515 358l285-176 285 176"/>
+  </g>
+  <g fill="#eae5da" text-anchor="middle">
+    <text x="800" y="700" font-family="serif" font-size="54" letter-spacing="18">齋 堂 房 屋 不 動 產</text>
+    <text x="800" y="758" fill="#8b9298" font-family="sans-serif" font-size="22" letter-spacing="8">IMAGE ARCHIVE TEMPORARILY SEALED</text>
+  </g>
+  <path d="M600 818h400" stroke="#b59a62" stroke-width="2" opacity=".5"/>
+</svg>

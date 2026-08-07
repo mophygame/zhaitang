@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import Image from "next/image"
+import Image from "@/components/shared/AppImage"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { properties, getProperty } from "@/data/properties"
@@ -9,6 +9,7 @@ import { SectionTitle } from "@/components/shared/UI"
 import "./property-detail.css"
 
 export function generateStaticParams(){return properties.map(p=>({id:p.id}))}
+export const dynamicParams = false
 export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{const p=getProperty((await params).id);return p?{title:p.title,description:`${p.address}｜${p.anomalyLevel}｜${p.status}`}:{title:"案件不存在"}}
 
 export default async function PropertyPage({params}:{params:Promise<{id:string}>}){

@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "@/components/shared/AppImage"
 import type { Creator } from "@/types"
 
 export function CreatorQuickLinks({ creators }: { creators: Creator[] }) {

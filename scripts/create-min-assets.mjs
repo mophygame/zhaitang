@@ -2,19 +2,25 @@ import { copyFile, readdir } from "node:fs/promises"
 import { extname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
-const assetsDirectory = fileURLToPath(new URL("../dist/client/assets/", import.meta.url))
-const entries = await readdir(assetsDirectory, { withFileTypes: true })
+const outputDirectory = fileURLToPath(new URL("../out/", import.meta.url))
 let generated = 0
 
-for (const entry of entries) {
-  if (!entry.isFile() || entry.name.includes(".min.")) continue
-  const extension = extname(entry.name)
-  if (extension !== ".js" && extension !== ".css") continue
-
-  const source = join(assetsDirectory, entry.name)
-  const targetName = `${entry.name.slice(0, -extension.length)}.min${extension}`
-  await copyFile(source, join(assetsDirectory, targetName))
-  generated += 1
+async function createCopies(directory) {
+  const entries = await readdir(directory, { withFileTypes: true })
+  for (const entry of entries) {
+    const source = join(directory, entry.name)
+    if (entry.isDirectory()) {
+      await createCopies(source)
+      continue
+    }
+    if (entry.name.includes(".min.")) continue
+    const extension = extname(entry.name)
+    if (extension !== ".js" && extension !== ".css") continue
+    const target = join(directory, `${entry.name.slice(0, -extension.length)}.min${extension}`)
+    await copyFile(source, target)
+    generated += 1
+  }
 }
 
-console.log(`Generated ${generated} additional .min.js/.min.css assets.`)
+await createCopies(outputDirectory)
+console.log(`Generated ${generated} additional .min.js/.min.css static assets.`)
