@@ -59,11 +59,11 @@ export const staff: StaffMember[] = [
   {
     id:"zhu-lan", employeeNumber:"ZT-007", name:"渚瀾", englishName:"Zhu Lan", title:"鹹魚店長", department:"門市管理部",
     ageDisplay:"約 20 歲", height:"182 cm", weight:"70 kg",
-    personality:"淡漠、被動，能靠不站、能趴不坐；不輕易評價或干涉他人。對被業績、愛情、復仇或執念驅使，明知辛苦仍不停下的人較容易多看一眼，偶爾會在對方撐不住前嫌麻煩地接走部分工作。",
+    personality:"一條已經放棄努力很多年的鹹魚。慵懶、被動、不爭不搶，對大多數事情都抱著「反正最後都會結束」的態度。",
     specialty:["中凶宅處置","執念追溯","空間淨化"],
-    description:"每月KPI 只求剛好達標，絕不多做。很少叫別人的名字並非忘記，而是假裝不曾記住；別人要求做事時通常先「嘖」一聲，再慢吞吞配合。",
+    description:"每月KPI 只求剛好達標，絕不多做；被要求做事時通常先「嘖」一聲，再慢吞吞配合。",
     quote:"「嘖……很重要嗎？」", portrait:"/images/employees/zhu-lan.webp", caseCount:206, successRate:99, status:"在職",
-    confidentialNote:"若店長翻身裝死，請交由副店長處理；不要把死亡稱為勇敢或解脫。",
+    confidentialNote:"若店長翻身裝死，請交由副店長處理；據說對「生命力」有著特殊的執著。",
   },
   {
     id:"hua-yu", employeeNumber:"ZT-008", name:"花楀", englishName:"Hua Yu", title:"櫃台行政秘書", department:"行政管理部",

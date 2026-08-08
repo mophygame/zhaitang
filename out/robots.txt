@@ -1,4 +1,5 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://zhaitang.example/sitemap.xml
+Host: https://zhaitang.pages.dev
+Sitemap: https://zhaitang.pages.dev/sitemap.xml

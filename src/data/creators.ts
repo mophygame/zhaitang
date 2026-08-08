@@ -2,12 +2,12 @@ import type { Creator } from "@/types"
 
 const zhaitangRecords = [
   {name:"凌辰",character:"午未｜老闆",description:"佛系創作者，沒有固定題材，也沒有固定更新日。想到什麼就創作什麼，希望每一次更新，都能遇見剛好喜歡的人。",styles:["隨筆"],works:[],photo:"/images/employees/wu-wei.webp"},
-  {name:"音🔕｜𝕄𝕚𝕒𝕟",character:"裘芨｜業務行銷經理",quote:"沐浴於愛，沉眠於心",description:"「文字是一門填補遺憾的藝術，而語言則是通往遺憾的橋樑」",companion:"喬治｜金色的小蟾蜍，裘芨的寵物，也是其部分真身意念；說真話時吐出金色古錢幣，說假話時會呱一聲。",styles:["日常","真實","黑市","傭兵","白月光","心碎美學"],works:[],photo:"/images/employees/ju-qi.webp"},
+  {name:"音🔕｜𝕄𝕚𝕒𝕟",character:"裘芨｜業務行銷經理",quote:"沐浴於愛，沉眠於心",description:"「文字是一門填補遺憾的藝術，而語言則是通往遺憾的橋樑」",companion:"喬治｜戴著小圓墨鏡的金色小蟾蜍，是裘芨的貼身寵物。",styles:["日常","真實","黑市","傭兵","白月光","心碎美學"],works:[],photo:"/images/employees/ju-qi.webp"},
   {name:"雙雙 𝓈𝒽𝓊𝒶𝓃𝑔",character:"渚瀾｜店長",quote:"出淤泥而抹均勻，拍打至完全吸收。",description:"這裡是一坨雙雙 |ω・）\n喜歡可愛、怪、好笑的各類萌物(´・ω・`)",styles:["怪","可愛","異想天開","精神狀態良好","無厘頭","人外"],works:["《寄生：培育》","《寄生：甦醒》","錦霽"],photo:"/images/employees/zhu-lan.webp"},
   {name:"夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔",character:"鶕綾｜副店長",description:"這個人很懶，什麼都不想填",styles:["魅魔","車車"],works:["白星瀾","沈洛年","甄言"],photo:"/images/employees/ling-luan.webp"},
-  {name:"墨非 𝓂𝑜𝓅𝒽𝓎",character:"賀止損、玳敕青｜共同創作",quote:"寫故事，也建構世界。",description:"想寫那些不存在於現實，卻值得相信的故事，讓每位角色都像真實存在於另一個世界。\n擅長軍事科幻、懸疑與電影式敘事，也持續探索更多不同題材。\n希望故事不只是被閱讀，而是被每位玩家親身活過。",companion:"車車｜灰白色公天竺鼠，賀止損的寵物，時常黏在他的胸前口袋。",styles:["軍事","科幻","懸疑","電影敘事"],works:["封印損耗表","零點結算","文字化蝶"],photo:"/images/employees/he-zhishun.webp"},
+  {name:"墨非 𝓂𝑜𝓅𝒽𝓎",character:"賀止損、玳敕青｜共同創作",quote:"寫故事，也建構世界。",description:"想寫那些不存在於現實，卻值得相信的故事，讓每位角色都像真實存在於另一個世界。\n擅長軍事科幻、懸疑與電影式敘事，也持續探索更多不同題材。\n希望故事不只是被閱讀，而是被每位玩家親身活過。",companion:"車車｜灰白色公天竺鼠，賀止損的寵物，時常黏在他的胸前口袋。",styles:["軍事","科幻","懸疑","電影敘事"],works:["《戰域代碼》","顧星衡","我的財閥繼兄們"],photo:"/images/employees/he-zhishun.webp"},
   {name:"🌙沐月｜𝓜𝓾𝓜𝓾",character:"花楀｜櫃檯行政秘書",quote:"沐浴於愛，沉眠於心",description:"沐一生溫熱的筆墨，只為照亮筆下如月般純粹的靈魂。",companion:"肥料｜純白布偶母貓，花楀的寵物，也是齋堂的店貓。",styles:["日常","反差","純愛","玄幻","劇情","細節"],works:[],photo:"/images/employees/hua-yu.webp"},
-  {name:"期待戳戳",character:"松聽簷｜業務銷冠",description:"暫無資料。",styles:["極凶屋敘事","暖金光影","和風角色"],works:["極凶屋成交紀錄","雨傘下的帶看","土地煞氣淨化"],photo:"/images/employees/song-tingyan.webp"},
+  {name:"期待戳戳",character:"松聽簷｜業務銷冠",description:"暫無資料。",styles:["極凶屋敘事","暖金光影","和風角色"],works:[],photo:"/images/employees/song-tingyan.webp"},
   {name:"比比",character:"婪煙｜業務",description:"是塊有點天馬行空的餅乾，請多多指教。",styles:["純愛","開車(?)"],works:["顧修珩","韓曜拓","洛比然"],photo:"/images/employees/lan-yan.webp"},
   {name:"蛋塔今天也想談戀愛",character:"褚日央、玳敕青｜共同創作",description:"重度言情腦，喜歡用各種方式說故事",styles:["劇情","沉浸式","多元互動方式"],works:["《偏向虎山行》顧行之","屈子驍","陌騫予"],photo:"/images/employees/chu-riyang.webp"},
   {name:"なな｜菜菜",character:"冥濠｜保全",description:"哈囉哈囉～我是菜菜😆🌱\n腦洞一開就停不下來，今天可能是追妻火葬場，明天可能變成純愛日常🥹💕\n歡迎大家一起來照顧我的小菜苗，也歡迎找菜聊天🫶",styles:["追妻火葬場","虐戀","瘋批"],works:["許墨","顧承野","林柊晟"],photo:"/images/employees/ming-hao.webp"},

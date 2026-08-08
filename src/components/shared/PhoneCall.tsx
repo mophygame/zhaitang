@@ -22,6 +22,7 @@ type PhoneCallContextValue = { callExtension: (staffId: string) => void; callMai
 type SpeechVoiceKind = "operator" | "staff"
 type StaffVoiceProfile = { pitch:number; rate:number; voiceOffset:number }
 type RecordedDialogue = { file:string; text:string }
+type VoiceManifest = Record<string,string[]>
 const withMp3Extension=(file:string)=>file.toLowerCase().endsWith(".mp3")?file:`${file}.mp3`
 
 const normalizeDialogues=(value:unknown):RecordedDialogue[]=>{
@@ -73,6 +74,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const audioContext = useRef<AudioContext | null>(null)
   const recordedAudio = useRef<HTMLAudioElement | null>(null)
   const dialogueCache = useRef(new Map<string,Promise<RecordedDialogue[]>>())
+  const voiceManifest = useRef<Promise<VoiceManifest> | null>(null)
   const callSession = useRef(0)
 
   const stopRing = useCallback(() => {
@@ -95,10 +97,17 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const loadRecordedDialogues=useCallback((member:StaffMember)=>{
     const cached=dialogueCache.current.get(member.name)
     if(cached)return cached
-    const request=fetch(`/assets/voice/${encodeURIComponent(member.name)}/dialogue.json`)
+    const dialogueRequest=fetch(`/assets/voice/${encodeURIComponent(member.name)}/dialogue.json`)
       .then(response=>response.ok?response.json():Promise.reject())
       .then(normalizeDialogues)
       .catch(()=>[])
+    voiceManifest.current??=fetch("/assets/voice/manifest.json")
+      .then(response=>response.ok?response.json() as Promise<VoiceManifest>:Promise.reject())
+      .catch(()=>({}))
+    const request=Promise.all([dialogueRequest,voiceManifest.current]).then(([dialogues,manifest])=>{
+      if(dialogues.length>0)return dialogues
+      return (manifest[member.name]??[]).map(file=>({file,text:""}))
+    })
     dialogueCache.current.set(member.name,request)
     return request
   },[])
@@ -224,7 +233,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       const playLine=(index:number)=>{
         if(session!==callSession.current)return
         const line=lines[index]
-        setTranscript(line.text)
+        setTranscript(line.text||`${member.name} 語音播放中……`)
         const finished=()=>{
           if(session!==callSession.current)return
           if(index===lines.length-1){

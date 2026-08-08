@@ -15,6 +15,8 @@ const subtleOverlays = [
 const pronouncedOverlays = [
   fallbackOverlay,
   "/assets/supernatural/02.webp",
+  "/assets/supernatural/08.webp",
+  "/assets/supernatural/09.webp",
 ] as const
 
 /**

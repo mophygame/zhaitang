@@ -6,6 +6,7 @@ import "./creators.css"
 export const metadata: Metadata = {
   title: "創作者介紹",
   description: "認識共同構築齋堂房屋不動產角色與世界觀的創作者，以及提供靈感、回饋與協助的特別致謝。",
+  alternates: { canonical: "/creators" },
 }
 
 export default function CreatorsPage() {

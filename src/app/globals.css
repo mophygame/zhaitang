@@ -247,6 +247,14 @@ video {
 body[aria-busy="true"]{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.page-loading-screen,.page-loading-mark i b{transition:none}}
 
+/* 全站細長暗金捲軸 */
+html,*{scrollbar-width:thin;scrollbar-color:#8d7548 #07090a}
+*::-webkit-scrollbar{width:7px;height:7px}
+*::-webkit-scrollbar-track{background:#07090a}
+*::-webkit-scrollbar-thumb{border:1px solid #07090a;border-radius:999px;background:#8d7548}
+*::-webkit-scrollbar-thumb:hover{background:#c3a76a}
+*::-webkit-scrollbar-corner{background:#07090a}
+
 .app-download{display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,.8fr);gap:clamp(36px,7vw,100px);align-items:center;padding:clamp(70px,8vw,120px) 8vw;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#101416,#080a0b 64%)}
 .footer-app-download{border-top:1px solid var(--line)}
 .app-download h2{margin:8px 0 12px;font-size:clamp(34px,5vw,64px)}

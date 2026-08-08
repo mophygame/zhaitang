@@ -10,7 +10,7 @@ import "./property-detail.css"
 
 export function generateStaticParams(){return properties.map(p=>({id:p.id}))}
 export const dynamicParams = false
-export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{const p=getProperty((await params).id);return p?{title:p.title,description:`${p.address}｜${p.anomalyLevel}｜${p.status}`}:{title:"案件不存在"}}
+export async function generateMetadata({params}:{params:Promise<{id:string}>}):Promise<Metadata>{const id=(await params).id;const p=getProperty(id);return p?{title:p.title,description:`${p.address}｜${p.anomalyLevel}｜${p.status}`,alternates:{canonical:`/properties/${id}`}}:{title:"案件不存在"}}
 
 export default async function PropertyPage({params}:{params:Promise<{id:string}>}){
   const p=getProperty((await params).id)

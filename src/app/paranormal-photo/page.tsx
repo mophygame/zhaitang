@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { PhotoLab } from "@/components/paranormal/PhotoLab"
 
-export const metadata: Metadata = { title: "靈異影像檢測" }
+export const metadata: Metadata = { title: "靈異影像檢測", alternates: { canonical: "/paranormal-photo" } }
 
 export default function ParanormalPage() {
   return (

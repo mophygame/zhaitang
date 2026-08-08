@@ -1,6 +1,6 @@
-import { cpSync, mkdirSync, rmSync, statSync } from "node:fs"
+import { cpSync, mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
-import { basename } from "node:path"
+import { basename, join } from "node:path"
 
 const source = fileURLToPath(new URL("../assets/", import.meta.url))
 const publicTarget = fileURLToPath(new URL("../public/assets/", import.meta.url))
@@ -16,10 +16,35 @@ const deployableAsset = path => {
   return false
 }
 
+const createVoiceManifest = target => {
+  const voiceDirectory = join(target, "voice")
+  let employees = []
+  try {
+    employees = readdirSync(voiceDirectory, { withFileTypes: true })
+  } catch {
+    return
+  }
+
+  const manifest = Object.fromEntries(employees
+    .filter(entry => entry.isDirectory())
+    .map(entry => {
+      const employeeDirectory = join(voiceDirectory, entry.name)
+      const files = readdirSync(employeeDirectory, { withFileTypes: true })
+        .filter(file => file.isFile() && /\.(?:mp3|m4a|wav|ogg)$/i.test(file.name))
+        .map(file => file.name)
+        .sort((left, right) => left.localeCompare(right, "zh-Hant", { numeric: true }))
+      return [entry.name, files]
+    })
+    .filter(([, files]) => files.length > 0))
+
+  writeFileSync(join(voiceDirectory, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`)
+}
+
 const syncAssets = target => {
   rmSync(target, { recursive: true, force: true })
   mkdirSync(target, { recursive: true })
   cpSync(source, target, { recursive: true, force: true, filter: deployableAsset })
+  createVoiceManifest(target)
 }
 
 syncAssets(publicTarget)
