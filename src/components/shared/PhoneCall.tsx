@@ -21,7 +21,8 @@ type CallPhase = "dialing" | "ringing" | "operator" | "transferring" | "connecte
 type PhoneCallContextValue = { callExtension: (staffId: string) => void; callMain: () => void }
 type SpeechVoiceKind = "operator" | "staff"
 type StaffVoiceProfile = { pitch:number; rate:number; voiceOffset:number }
-type RecordedDialogue = { file:string; text:string }
+type DialogueCategory = "接電話用" | "中間聊天用" | "掛電話用"
+type RecordedDialogue = { file:string; text:string; category?:DialogueCategory }
 type VoiceManifest = Record<string,string[]>
 const withMp3Extension=(file:string)=>file.toLowerCase().endsWith(".mp3")?file:`${file}.mp3`
 const normalizeTranscript=(text:string)=>text.trim().replace(/^「([\s\S]*)」$/,"$1")
@@ -35,15 +36,26 @@ const playAudioSource=(audio:HTMLAudioElement,src:string,onEnded:()=>void,onErro
 }
 
 const normalizeDialogues=(value:unknown):RecordedDialogue[]=>{
-  const source=value&&typeof value==="object"&&!Array.isArray(value)&&"dialogues" in value
-    ? (value as {dialogues:unknown}).dialogues:value
+  const container=value&&typeof value==="object"&&!Array.isArray(value)
+    ? value as Record<string,unknown>:null
+  const source=container&&"dialogues" in container?container.dialogues:value
+  const categoryLists=container?.categories&&typeof container.categories==="object"
+    ? container.categories as Partial<Record<DialogueCategory,unknown>>:{}
+  const categoryFor=(file:string):DialogueCategory|undefined=>{
+    const filename=file.replace(/\.mp3$/i,"")
+    return (["接電話用","中間聊天用","掛電話用"] as const)
+      .find(category=>Array.isArray(categoryLists[category])&&(categoryLists[category] as unknown[]).includes(filename))
+  }
   if(Array.isArray(source))return source.flatMap((item,index)=>{
-    if(typeof item==="string")return [{file:`${String(index+1).padStart(2,"0")}.mp3`,text:normalizeTranscript(item)}]
+    if(typeof item==="string"){
+      const file=`${String(index+1).padStart(2,"0")}.mp3`
+      return [{file,text:normalizeTranscript(item),category:categoryFor(file)}]
+    }
     if(!item||typeof item!=="object")return []
     const entry=item as Record<string,unknown>
     const file=entry.file??entry.filename??entry.audio??entry.src
     const text=entry.text??entry.dialogue??entry.content
-    return typeof file==="string"&&typeof text==="string"?[{file:withMp3Extension(file),text:normalizeTranscript(text)}]:[]
+    return typeof file==="string"&&typeof text==="string"?[{file:withMp3Extension(file),text:normalizeTranscript(text),category:categoryFor(file)}]:[]
   })
   if(source&&typeof source==="object")return Object.entries(source as Record<string,unknown>)
     .flatMap(([file,text])=>typeof text==="string"?[{file:withMp3Extension(file),text:normalizeTranscript(text)}]:[])
@@ -124,7 +136,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       .catch(()=>({}))
     const request=Promise.all([dialogueRequest,voiceManifest.current]).then(([dialogues,manifest])=>{
       if(dialogues.length>0)return dialogues
-      return (manifest[member.name]??[]).map(file=>({file,text:""}))
+      return (manifest[member.name]??[]).map(file=>({file,text:"",category:undefined}))
     })
     dialogueCache.current.set(member.name,request)
     return request
@@ -260,7 +272,15 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       const useRecorded=recorded.length>0
       const pool=useRecorded?recorded:syntheticPool.map((text,index)=>({file:"",text,index}))
       const shuffled=[...pool].sort(()=>Math.random()-.5)
-      const lines=Array.from({length:3},(_,index)=>shuffled[index%shuffled.length])
+      const categorized=(category:DialogueCategory)=>recorded.filter(line=>line.category===category)
+      const pick=(items:RecordedDialogue[])=>items[Math.floor(Math.random()*items.length)]
+      const opening=categorized("接電話用")
+      const middle=categorized("中間聊天用")
+      const closing=categorized("掛電話用")
+      const lines=useRecorded&&recorded.length===3?recorded
+        : useRecorded&&opening.length>0&&middle.length>0&&closing.length>0
+          ? [pick(opening),pick(middle),pick(closing)]
+          : Array.from({length:3},(_,index)=>shuffled[index%shuffled.length])
       const playLine=(index:number)=>{
         if(session!==callSession.current)return
         const line=lines[index]
@@ -344,9 +364,10 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       setDialedNumber(getStaffExtension(member.id))
       setPhase("busy")
       setTranscript(busyScript)
-      speak(busyScript)
-      const voicemailTimer = window.setTimeout(enterVoicemail, 2800)
-      timers.current.push(voicemailTimer)
+      speak(busyScript,()=>{
+        const voicemailTimer=window.setTimeout(enterVoicemail,450)
+        timers.current.push(voicemailTimer)
+      })
       return
     }
     transferTo(member)
