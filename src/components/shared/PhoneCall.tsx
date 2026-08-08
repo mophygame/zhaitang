@@ -89,7 +89,13 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     timers.current = []
     stopRing()
     window.speechSynthesis?.cancel()
-    if(recordedAudio.current){recordedAudio.current.pause();recordedAudio.current.src=""}
+    if(recordedAudio.current){
+      recordedAudio.current.onended=null
+      recordedAudio.current.onerror=null
+      recordedAudio.current.pause()
+      recordedAudio.current.removeAttribute("src")
+      recordedAudio.current.load()
+    }
     recordedAudio.current=null
     if (audioContext.current) void audioContext.current.close()
     audioContext.current = null
@@ -274,17 +280,24 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
         const audio=new Audio(`/assets/voice/${encodeURIComponent(member.name)}/${line.file.split("/").map(encodeURIComponent).join("/")}`)
         recordedAudio.current=audio
         audio.preload="auto"
-        let fallbackStarted=false
-        const fallback=()=>{
-          if(fallbackStarted)return
-          fallbackStarted=true
+        let completed=false
+        const finishOnce=()=>{
+          if(completed)return
+          completed=true
           audio.onended=null
           audio.onerror=null
-          speak(line.text,finished,"staff",member.id)
+          finished()
         }
-        audio.onended=finished
-        audio.onerror=fallback
-        void audio.play().catch(fallback)
+        const abortCall=()=>{
+          if(completed)return
+          completed=true
+          audio.onended=null
+          audio.onerror=null
+          if(session===callSession.current)playPhoneEffect("handup",hangUp)
+        }
+        audio.onended=finishOnce
+        audio.onerror=abortCall
+        void audio.play().catch(abortCall)
       }
       playPhoneEffect("take",()=>{
         if(session===callSession.current)playLine(0)
