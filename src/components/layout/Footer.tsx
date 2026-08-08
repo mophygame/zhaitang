@@ -18,7 +18,7 @@ export function Footer(){
     </div>
     <section className="app-download footer-app-download" aria-labelledby="app-download-title">
       <div><p className="kicker">TAKE THE STORY WITH YOU</p><h2 id="app-download-title">下載 Touchie AI</h2><p>在手機上探索虛擬角色互動與陪伴，讓齋堂的故事隨時與你同行。</p></div>
-      <div className="app-download-actions"><a className="app-store-link" href="https://apps.apple.com/tw/app/touchie-ai%E8%99%9B%E6%93%AC%E8%A7%92%E8%89%B2%E4%BA%92%E5%8B%95%E8%88%87%E9%99%AA%E4%BC%B4/id6749675167" target="_blank" rel="noreferrer"><small>Download on the</small><strong>App Store</strong><span>iOS 版本<OutwardArrow/></span></a><span className="app-store-link unavailable" aria-disabled="true"><small>GET IT ON</small><strong>Google Play</strong><span>Android 版本・即將推出</span></span></div>
+      <div className="app-download-actions"><a className="app-store-link" href="https://apps.apple.com/tw/app/touchie-ai%E8%99%9B%E6%93%AC%E8%A7%92%E8%89%B2%E4%BA%92%E5%8B%95%E8%88%87%E9%99%AA%E4%BC%B4/id6749675167" target="_blank" rel="noreferrer"><small>Download on the</small><strong>App Store</strong><span>iOS 版本<OutwardArrow/></span></a><a className="app-store-link" href="https://play.google.com/store/apps/details?id=com.touchie.ai" target="_blank" rel="noreferrer"><small>GET IT ON</small><strong>Google Play</strong><span>Android 版本<OutwardArrow/></span></a></div>
     </section>
     <p className={`footer-secret ${changed?"changed":""}`}>{changed?"如果那句話移動了，請不要往身後看。":"若你已看見不屬於頁面的內容，請立即關閉瀏覽器。"}</p>
   </footer>
