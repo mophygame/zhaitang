@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "@/components/shared/AppImage"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { Phone, X } from "@/components/shared/Icons"
 import { OutwardArrow } from "@/components/shared/OutwardArrow"
 import { getStaffExtension, usePhoneCall } from "@/components/shared/PhoneCall"
@@ -16,7 +16,7 @@ const creatorsForStaff=(member:StaffMember)=>creators.filter(creator=>
   creator.zhaitangCharacter.split("｜")[0].split("、").map(name=>name.trim()).includes(member.name)
 )
 
-const staffProfileCard=(member:StaffMember)=>`/assets/employee_profile/資料卡_${member.name}.webp`
+const staffProfileCard=(member:StaffMember)=>`/assets/employee_profile/資料卡_${member.name}.${member.id==="zhu-lan"?"gif":"webp"}`
 
 export function StaffCard({member,onOpen}:{member:StaffMember;onOpen:(member:StaffMember)=>void}) {
   return <button id={`staff-${member.id}`} className={`staff-card ${member.id}`} onClick={()=>onOpen(member)}>
@@ -40,13 +40,33 @@ function StaffStickyLinks({staff}:{staff:StaffMember[]}) {
 
 export function StaffDetailModal({member,onClose,onOpenCreator}:{member:StaffMember|null;onClose:()=>void;onOpenCreator:(creator:Creator)=>void}) {
   const {callExtension}=usePhoneCall()
+  const imageRef=useRef<HTMLDivElement>(null)
+  const [cardHeight,setCardHeight]=useState<number|null>(null)
+
+  useLayoutEffect(()=>{
+    if(!member||!imageRef.current){
+      setCardHeight(null)
+      return
+    }
+    const image=imageRef.current
+    const syncHeight=()=>setCardHeight(image.getBoundingClientRect().height)
+    syncHeight()
+    const observer=new ResizeObserver(syncHeight)
+    observer.observe(image)
+    window.addEventListener("resize",syncHeight)
+    return()=>{
+      observer.disconnect()
+      window.removeEventListener("resize",syncHeight)
+    }
+  },[member])
+
   if(!member)return null
   const memberCreators=creatorsForStaff(member)
   return <div className="modal-backdrop" onMouseDown={event=>event.currentTarget===event.target&&onClose()}>
     <div className="modal staff-modal" role="dialog" aria-modal="true" aria-label={`${member.name}員工檔案`}>
       <button className="icon-button close" onClick={onClose} aria-label="關閉"><X/></button>
-      <div className="staff-modal-scroll">
-        <div className="staff-modal-image"><Image src={staffProfileCard(member)} alt={`${member.name}員工資料卡`} fill sizes="50vw"/></div>
+      <div className="staff-modal-scroll" style={cardHeight?{"--staff-card-height":`${cardHeight}px`} as CSSProperties:undefined}>
+        <div className="staff-modal-image" ref={imageRef}><Image src={staffProfileCard(member)} alt={`${member.name}員工資料卡`} fill sizes="50vw"/></div>
         <div className="staff-modal-copy">
           <p className="kicker">INTERNAL PERSONNEL FILE · {member.employeeNumber}</p>
           <h2>{member.name}<small>{member.englishName}</small></h2><p>{member.description}</p>

@@ -42,7 +42,7 @@ export default function CreatorsPage() {
         <div className="creator-section-heading">
           <span>02 / SPECIAL THANKS</span>
           <h2 id="friendship-creators-title">特別致謝 Special Thanks</h2>
-          <p>在討論與創作整理過程中提供想法、建議、回饋與協助的創作者。</p>
+          <p>在討論與創作整理過程中提供想法、建議、回饋與協助的跨平台創作者。</p>
         </div>
         <div className="creator-list creator-sponsor-list">
           {featuredFriendshipCreators.map((creator,index)=><CreatorCard creator={creator} index={zhaitangCreators.length+index} key={creator.id}/>)}

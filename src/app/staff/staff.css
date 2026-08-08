@@ -107,7 +107,9 @@
 }
 
 .staff-modal-copy {
-  max-height: calc(100dvh - 40px);
+  height: var(--staff-card-height, auto);
+  max-height: var(--staff-card-height, calc(100dvh - 40px));
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -311,6 +313,7 @@
   }
 
   .staff-modal-copy {
+    height: auto;
     max-height: none;
     overflow: visible;
   }

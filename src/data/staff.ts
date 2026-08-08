@@ -11,7 +11,7 @@ export const staff: StaffMember[] = [
     confidentialNote:"若老物件浮出異常或自行開啟，請勿擅自移動，交由本人完成勘查。",
   },
   {
-    id:"he-zhishun", employeeNumber:"ZT-002", name:"賀止損", englishName:"He Zhishun", title:"會計", department:"財務清算部",
+    id:"he-zhishun", employeeNumber:"ZT-002", name:"賀止損", englishName:"He Zhishun", title:"會計師", department:"財務清算部",
     ageDisplay:"未公開", height:"183 cm", weight:"未公開",
     personality:"極度厭惡錯帳、皺掉的發票與過期請款。嘴毒又陰陽怪氣，卻總會默默把爛攤子收乾淨；對午未表面冷淡，實際非常狗腿。",
     companion:{name:"車車",kind:"灰白色公天竺鼠",description:"常窩在賀止損胸前口袋。牠聰明、會看氣氛，卻會對任何生物、物體甚至靈體突然發情。"},
