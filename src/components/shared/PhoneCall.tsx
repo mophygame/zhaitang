@@ -25,6 +25,14 @@ type RecordedDialogue = { file:string; text:string }
 type VoiceManifest = Record<string,string[]>
 const withMp3Extension=(file:string)=>file.toLowerCase().endsWith(".mp3")?file:`${file}.mp3`
 const normalizeTranscript=(text:string)=>text.trim().replace(/^「([\s\S]*)」$/,"$1")
+const playAudioSource=(audio:HTMLAudioElement,src:string,onEnded:()=>void,onError=onEnded)=>{
+  audio.pause()
+  audio.onended=onEnded
+  audio.onerror=onError
+  audio.src=src
+  audio.preload="auto"
+  void audio.play().catch(onError)
+}
 
 const normalizeDialogues=(value:unknown):RecordedDialogue[]=>{
   const source=value&&typeof value==="object"&&!Array.isArray(value)&&"dialogues" in value
@@ -124,20 +132,15 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
 
   const playPhoneEffect=useCallback((kind:"take"|"handup",onEnd:()=>void)=>{
     const variant=Math.floor(Math.random()*4)+1
-    const audio=new Audio(`/assets/voice/phone_${kind}_sound_${variant}.mp3`)
+    const audio=recordedAudio.current??new Audio()
     recordedAudio.current=audio
-    audio.preload="auto"
     let completed=false
     const finish=()=>{
       if(completed)return
       completed=true
-      audio.onended=null
-      audio.onerror=null
       onEnd()
     }
-    audio.onended=finish
-    audio.onerror=finish
-    void audio.play().catch(finish)
+    playAudioSource(audio,`/assets/voice/phone_${kind}_sound_${variant}.mp3`,finish)
   },[])
 
   const hangUp = useCallback(() => {
@@ -265,11 +268,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
         const finished=()=>{
           if(session!==callSession.current)return
           if(index===lines.length-1){
-            const endTimer=window.setTimeout(()=>{
-              if(session!==callSession.current)return
-              playPhoneEffect("handup",hangUp)
-            },350)
-            timers.current.push(endTimer)
+            playPhoneEffect("handup",hangUp)
             return
           }
           const delay=index===0?wait(2000,3000):wait(1000,3000)
@@ -277,27 +276,21 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
           timers.current.push(nextTimer)
         }
         if(!useRecorded){speak(line.text,finished,"staff",member.id);return}
-        const audio=new Audio(`/assets/voice/${encodeURIComponent(member.name)}/${line.file.split("/").map(encodeURIComponent).join("/")}`)
+        const audio=recordedAudio.current??new Audio()
         recordedAudio.current=audio
-        audio.preload="auto"
         let completed=false
         const finishOnce=()=>{
           if(completed)return
           completed=true
-          audio.onended=null
-          audio.onerror=null
           finished()
         }
         const abortCall=()=>{
           if(completed)return
           completed=true
-          audio.onended=null
-          audio.onerror=null
           if(session===callSession.current)playPhoneEffect("handup",hangUp)
         }
-        audio.onended=finishOnce
-        audio.onerror=abortCall
-        void audio.play().catch(abortCall)
+        const source=`/assets/voice/${encodeURIComponent(member.name)}/${line.file.split("/").map(encodeURIComponent).join("/")}`
+        playAudioSource(audio,source,finishOnce,abortCall)
       }
       playPhoneEffect("take",()=>{
         if(session===callSession.current)playLine(0)
@@ -371,8 +364,20 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     speak(script)
   }, [speak, stopRing])
 
+  const primeSpeechSynthesis=useCallback(()=>{
+    if(!("speechSynthesis" in window))return
+    const synthesis=window.speechSynthesis
+    synthesis.resume()
+    const primer=new SpeechSynthesisUtterance("。")
+    primer.lang="zh-TW"
+    primer.volume=0
+    primer.rate=10
+    synthesis.speak(primer)
+  },[])
+
   const begin = useCallback((staffId?: string) => {
     clearAudio()
+    primeSpeechSynthesis()
     setOpen(true)
     setPhase("dialing")
     setRecipient(null)
@@ -393,7 +398,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       } else enterOperator()
     }, staffId ? 2400 : wait(3000, 6000))
     timers.current.push(dialingTimer, resolutionTimer)
-  }, [clearAudio, connectTo, enterOperator, ring, tone])
+  }, [clearAudio, connectTo, enterOperator, primeSpeechSynthesis, ring, tone])
 
   const handleKey = useCallback((key: string) => {
     if (phase !== "operator") return
