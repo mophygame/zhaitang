@@ -24,20 +24,21 @@ type StaffVoiceProfile = { pitch:number; rate:number; voiceOffset:number }
 type RecordedDialogue = { file:string; text:string }
 type VoiceManifest = Record<string,string[]>
 const withMp3Extension=(file:string)=>file.toLowerCase().endsWith(".mp3")?file:`${file}.mp3`
+const normalizeTranscript=(text:string)=>text.trim().replace(/^「([\s\S]*)」$/,"$1")
 
 const normalizeDialogues=(value:unknown):RecordedDialogue[]=>{
   const source=value&&typeof value==="object"&&!Array.isArray(value)&&"dialogues" in value
     ? (value as {dialogues:unknown}).dialogues:value
   if(Array.isArray(source))return source.flatMap((item,index)=>{
-    if(typeof item==="string")return [{file:`${String(index+1).padStart(2,"0")}.mp3`,text:item}]
+    if(typeof item==="string")return [{file:`${String(index+1).padStart(2,"0")}.mp3`,text:normalizeTranscript(item)}]
     if(!item||typeof item!=="object")return []
     const entry=item as Record<string,unknown>
-    const file=entry.file??entry.audio??entry.src
+    const file=entry.file??entry.filename??entry.audio??entry.src
     const text=entry.text??entry.dialogue??entry.content
-    return typeof file==="string"&&typeof text==="string"?[{file:withMp3Extension(file),text}]:[]
+    return typeof file==="string"&&typeof text==="string"?[{file:withMp3Extension(file),text:normalizeTranscript(text)}]:[]
   })
   if(source&&typeof source==="object")return Object.entries(source as Record<string,unknown>)
-    .flatMap(([file,text])=>typeof text==="string"?[{file:withMp3Extension(file),text}]:[])
+    .flatMap(([file,text])=>typeof text==="string"?[{file:withMp3Extension(file),text:normalizeTranscript(text)}]:[])
   return []
 }
 
@@ -97,10 +98,13 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const loadRecordedDialogues=useCallback((member:StaffMember)=>{
     const cached=dialogueCache.current.get(member.name)
     if(cached)return cached
-    const dialogueRequest=fetch(`/assets/voice/${encodeURIComponent(member.name)}/dialogue.json`)
+    const voiceDirectory=`/assets/voice/${encodeURIComponent(member.name)}`
+    const fetchDialogues=(filename:string)=>fetch(`${voiceDirectory}/${filename}`)
       .then(response=>response.ok?response.json():Promise.reject())
       .then(normalizeDialogues)
       .catch(()=>[])
+    const dialogueRequest=fetchDialogues("dialog.json")
+      .then(dialogues=>dialogues.length>0?dialogues:fetchDialogues("dialogue.json"))
     voiceManifest.current??=fetch("/assets/voice/manifest.json")
       .then(response=>response.ok?response.json() as Promise<VoiceManifest>:Promise.reject())
       .catch(()=>({}))
@@ -110,6 +114,24 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     })
     dialogueCache.current.set(member.name,request)
     return request
+  },[])
+
+  const playPhoneEffect=useCallback((kind:"take"|"handup",onEnd:()=>void)=>{
+    const variant=Math.floor(Math.random()*4)+1
+    const audio=new Audio(`/assets/voice/phone_${kind}_sound_${variant}.mp3`)
+    recordedAudio.current=audio
+    audio.preload="auto"
+    let completed=false
+    const finish=()=>{
+      if(completed)return
+      completed=true
+      audio.onended=null
+      audio.onerror=null
+      onEnd()
+    }
+    audio.onended=finish
+    audio.onerror=finish
+    void audio.play().catch(finish)
   },[])
 
   const hangUp = useCallback(() => {
@@ -237,8 +259,10 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
         const finished=()=>{
           if(session!==callSession.current)return
           if(index===lines.length-1){
-            // Reserved for a future recorded hang-up effect before closing.
-            const endTimer=window.setTimeout(hangUp,350)
+            const endTimer=window.setTimeout(()=>{
+              if(session!==callSession.current)return
+              playPhoneEffect("handup",hangUp)
+            },350)
             timers.current.push(endTimer)
             return
           }
@@ -262,9 +286,11 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
         audio.onerror=fallback
         void audio.play().catch(fallback)
       }
-      playLine(0)
+      playPhoneEffect("take",()=>{
+        if(session===callSession.current)playLine(0)
+      })
     })
-  }, [hangUp, loadRecordedDialogues, speak, stopRing])
+  }, [hangUp, loadRecordedDialogues, playPhoneEffect, speak, stopRing])
 
   const enterVoicemail = useCallback(() => {
     stopRing()

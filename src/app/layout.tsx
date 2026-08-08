@@ -34,6 +34,9 @@ export const metadata: Metadata = {
     title: "齋堂房屋",
     statusBarStyle: "black-translucent",
   },
+  other: {
+    "apple-itunes-app": "app-id=6749675167",
+  },
   robots: {
     index: true,
     follow: true,
