@@ -1,3 +1,16 @@
+.staff-page-hero {
+  background:
+    linear-gradient(90deg, rgba(6, 8, 9, .94) 0%, rgba(6, 8, 9, .75) 42%, rgba(6, 8, 9, .28) 100%),
+    linear-gradient(0deg, rgba(6, 8, 9, .78) 0%, transparent 58%),
+    url("/assets/bg_group.webp") center 42% / cover no-repeat;
+}
+
+.staff-page-hero > * {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .9);
+}
+
 .staff-modal {
   display: block;
   width: min(1180px, 100%);
