@@ -7,7 +7,7 @@ const zhaitangRecords = [
   {name:"夜欞 𝓎𝑒 𝑙𝒾𝓃𝑔",character:"鶕綾｜副店長",description:"這個人很懶，什麼都不想填",styles:["魅魔","車車"],works:["白星瀾","沈洛年","甄言"],photo:"/images/employees/ling-luan.webp"},
   {name:"墨非 𝓂𝑜𝓅𝒽𝓎",character:"賀止損、玳敕青｜共同創作",quote:"寫故事，也建構世界。",description:"想寫那些不存在於現實，卻值得相信的故事，讓每位角色都像真實存在於另一個世界。\n擅長軍事科幻、懸疑與電影式敘事，也持續探索更多不同題材。\n希望故事不只是被閱讀，而是被每位玩家親身活過。",companion:"車車｜灰白色公天竺鼠，賀止損的寵物，時常黏在他的胸前口袋。",styles:["軍事","科幻","懸疑","電影敘事"],works:["《戰域代碼》","顧星衡","我的財閥繼兄們"],photo:"/images/employees/he-zhishun.webp"},
   {name:"🌙沐月｜𝓜𝓾𝓜𝓾",character:"花楀｜櫃檯行政秘書",quote:"沐浴於愛，沉眠於心",description:"沐一生溫熱的筆墨，只為照亮筆下如月般純粹的靈魂。",companion:"肥料｜純白布偶母貓，花楀的寵物，也是齋堂的店貓。",styles:["日常","反差","純愛","玄幻","劇情","細節"],works:[],photo:"/images/employees/hua-yu.webp"},
-  {name:"期待戳戳",character:"松聽簷｜業務銷冠",description:"暫無資料。",styles:["極凶屋敘事","暖金光影","和風角色"],works:[],photo:"/images/employees/song-tingyan.webp"},
+  {name:"期待戳戳",character:"松聽簷｜業務銷冠",description:"寫心動，也寫命運；讓每一次相遇，都成為故事的伏筆。",styles:["甜寵","乙女","反差","幻想","世界觀","群像"],works:[],photo:"/images/employees/song-tingyan.webp"},
   {name:"比比",character:"婪煙｜業務",description:"是塊有點天馬行空的餅乾，請多多指教。",styles:["純愛","開車(?)"],works:["顧修珩","韓曜拓","洛比然"],photo:"/images/employees/lan-yan.webp"},
   {name:"蛋塔今天也想談戀愛",character:"褚日央、玳敕青｜共同創作",description:"重度言情腦，喜歡用各種方式說故事",styles:["劇情","沉浸式","多元互動方式"],works:["《偏向虎山行》顧行之","屈子驍","陌騫予"],photo:"/images/employees/chu-riyang.webp"},
   {name:"なな｜菜菜",character:"冥濠｜保全",description:"哈囉哈囉～我是菜菜😆🌱\n腦洞一開就停不下來，今天可能是追妻火葬場，明天可能變成純愛日常🥹💕\n歡迎大家一起來照顧我的小菜苗，也歡迎找菜聊天🫶",styles:["追妻火葬場","虐戀","瘋批"],works:["許墨","顧承野","林柊晟"],photo:"/images/employees/ming-hao.webp"},
@@ -111,10 +111,14 @@ zhaitangCreators[5]={
 zhaitangCreators[6]={
   ...zhaitangCreators[6],
   discordUrl:"",
-  discordLabel:"",
+  discordLabel:"budnix77",
   profileUrl:"https://h5.touchieai.com/author?code=93b724f3-dd46-42b0-8e9c-15f0e15a031f",
   otherLinks:[],
-  recommendedWorks:[],
+  recommendedWorks:[
+    {title:"王序高等學園",hashtags:["貴族學園","開放世界"],url:"https://h5.touchieai.com/character?code=fcbb3ad2-d395-49c0-8f94-5007de6c4de2",image:"/assets/work/期待戳戳_王序高等學園.webp"},
+    {title:"項擎遠",hashtags:["年上鰥夫","重情義"],url:"https://h5.touchieai.com/character?code=be430b66-a6e1-49ae-9c08-bf89cd1b150d",image:"/assets/work/期待戳戳_項擎遠.webp"},
+    {title:"拓跋璟",hashtags:["紈絝王爺","先婚後愛"],url:"https://h5.touchieai.com/character?code=74291e51-dce7-48a7-93f2-8b481ac38b6d",image:"/assets/work/期待戳戳_拓跋璟.webp"}
+  ],
 }
 zhaitangCreators[7]={
   ...zhaitangCreators[7],
