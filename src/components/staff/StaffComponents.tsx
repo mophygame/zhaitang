@@ -16,7 +16,7 @@ const creatorsForStaff=(member:StaffMember)=>creators.filter(creator=>
   creator.zhaitangCharacter.split("｜")[0].split("、").map(name=>name.trim()).includes(member.name)
 )
 
-const staffProfileCard=(member:StaffMember)=>`/assets/employee_profile/資料卡_${member.name}.${member.id==="zhu-lan"?"gif":"webp"}`
+const staffProfileCard=(member:StaffMember)=>`/assets/employee_profile/資料卡_${member.name}.webp`
 
 export function StaffCard({member,onOpen}:{member:StaffMember;onOpen:(member:StaffMember)=>void}) {
   return <button id={`staff-${member.id}`} className={`staff-card ${member.id}`} onClick={()=>onOpen(member)}>
