@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "@/components/shared/AppImage"
+import { OutwardArrow } from "@/components/shared/OutwardArrow"
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { Creator } from "@/types"
 
@@ -123,9 +124,9 @@ export function CreatorCard({ creator, index }: { creator: Creator; index: numbe
             </div>
           </dl>
           <div className="creator-links">
-            {creator.discordUrl?<a href={creator.discordUrl} target="_blank" rel="noreferrer">Discord ↗</a>:creator.discordLabel?<span className="creator-link-pending">Discord：{creator.discordLabel}</span>:null}
-            {creator.profileUrl?<a href={creator.profileUrl} target="_blank" rel="noreferrer">Touchie 作者頁面 ↗</a>:creator.profileLabel?<span className="creator-link-pending">Touchie：{creator.profileLabel}</span>:<span className="creator-link-pending">Touchie 作者頁面待補</span>}
-            {creator.otherLinks?.map(link=><a href={link.url} target="_blank" rel="noreferrer" key={link.label}>{link.label} ↗</a>)}
+            {creator.discordUrl?<a href={creator.discordUrl} target="_blank" rel="noreferrer">Discord<OutwardArrow/></a>:creator.discordLabel?<span className="creator-link-pending">Discord：{creator.discordLabel}</span>:null}
+            {creator.profileUrl?<a href={creator.profileUrl} target="_blank" rel="noreferrer">Touchie 作者頁面<OutwardArrow/></a>:creator.profileLabel?<span className="creator-link-pending">Touchie：{creator.profileLabel}</span>:<span className="creator-link-pending">Touchie 作者頁面待補</span>}
+            {creator.otherLinks?.map(link=><a href={link.url} target="_blank" rel="noreferrer" key={link.label}>{link.label}<OutwardArrow/></a>)}
           </div>
         </div>
         <aside className="creator-works creator-works-side">

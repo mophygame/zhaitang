@@ -17,6 +17,8 @@ export default async function PropertyPage({params}:{params:Promise<{id:string}>
   if(!p)notFound()
   const night=new Date().getHours()<5
   const currentIndex=properties.findIndex(item=>item.id===p.id)
+  const beforeValueRatios=[.28,.34,.2,.31,.37,.18,.42,.3]
+  const beforePrice=p.price?Math.round(p.price*beforeValueRatios[currentIndex]/10000)*10000:null
   const previousProperty=properties[(currentIndex-1+properties.length)%properties.length]
   const nextProperty=properties[(currentIndex+1)%properties.length]
   const facts=[
@@ -28,7 +30,10 @@ export default async function PropertyPage({params}:{params:Promise<{id:string}>
   return <>
     <section className="detail-hero"><Image src={p.coverImage} alt={`${p.title}物件主圖`} fill preload sizes="100vw"/><div/><div className="detail-title"><p className="kicker">CASE FILE {p.caseNumber}</p><h1>{p.title}</h1><p>{p.address}</p><div><AnomalyBadge level={p.anomalyLevel}/><StatusBadge status={p.status}/></div><strong>{p.price?`NT$ ${p.price.toLocaleString()}`:"價格面議"}</strong>{night&&<small>目前為夜間時段。請勿單獨前往現場。</small>}</div></section>
     <section className="section facts"><SectionTitle eyebrow="PROPERTY RECORD" title="房屋基本資料"/><dl>{facts.map(([key,value])=><div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl></section>
-    <section className="section"><SectionTitle eyebrow="VISUAL COMPARISON" title="處理前後對比"/><BeforeAfterSlider before={p.beforeImage} after={p.afterImage}/></section>
+    <section className="section"><SectionTitle eyebrow="VISUAL COMPARISON" title="處理前後對比"/><BeforeAfterSlider before={p.beforeImage} after={p.afterImage}/><div className={`comparison-pricing ${p.availableForSale?"is-saleable":"is-sealed"}`}>
+      <article><span>BEFORE / 處理前</span><small>{p.availableForSale?"異常未處理估值":"原始交易狀態"}</small><strong>{p.availableForSale&&beforePrice?`NT$ ${beforePrice.toLocaleString()}`:"禁止交易"}</strong><p>{p.availableForSale?"受異常紀錄、現場風險與限制帶看影響。":"案件風險未解除，不接受議價或預約看房。"}</p></article>
+      <article><span>AFTER / 處理後</span><small>{p.availableForSale?"核准公開售價":"最終處置判定"}</small><strong>{p.availableForSale&&p.price?`NT$ ${p.price.toLocaleString()}`:"不出售・封存物件"}</strong><p>{p.availableForSale?"完成處置、產權覆核與居住安全評級後重新定價。":`${p.status}，目前不進入公開銷售程序。`}</p></article>
+    </div></section>
     <section className="section record-grid"><div><SectionTitle eyebrow="ANOMALY METRICS" title="異常數據"/><AnomalyMetrics property={p}/></div><div><SectionTitle eyebrow="CASE TIMELINE" title="案件時間線"/><CaseTimeline items={p.timeline}/></div></section>
     <section className="section report-section"><SectionTitle eyebrow="FINAL DISPOSITION" title="處理紀錄"/><div className="report-paper">
       <h3>階段與負責人</h3><div className="handling-stages">{p.handlingStages.map(item=>{const members=item.staffIds.map(getStaff).filter(member=>member!==undefined);return <article key={item.stage}><span>{item.stage}</span><strong>{members.length?members.map(member=>member.name).join("、"):"未登記"}</strong><p>{item.detail}</p></article>})}</div>

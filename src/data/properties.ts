@@ -15,6 +15,16 @@ const consultationTeams=[["ju-qi"],["zhu-lan","hua-yu"],["ling-luan","chu-riyang
 const surveyTeams=[["dai-chiqing"],["dai-chiqing","lan-yan"],["dai-chiqing","ming-hao"],["dai-chiqing","song-tingyan"],["dai-chiqing"],["dai-chiqing","ming-hao","chu-riyang"],["dai-chiqing","lan-yan"],["dai-chiqing","song-tingyan"]]
 const responseTeams=[["ju-qi","lan-yan"],["zhu-lan","hua-yu"],["ling-luan","song-tingyan","ming-hao"],["chu-riyang","lan-yan","ming-hao"],["song-tingyan"],["zhu-lan","ling-luan","ming-hao"],["ju-qi","hua-yu"],["chu-riyang","lan-yan"]]
 const highestRiskCases=new Set([2,3,5])
+const specialistStages:Property["handlingStages"][]=[
+  [{stage:"契約因果裁定",staffIds:["ling-luan"],detail:"鶕綾以紅瞳辨識產權、死亡與衣櫃殘留間的因果線，剝離錯誤嫁接的所有權執念，避免異常隨下次移轉重新附著。"}],
+  [{stage:"押金因果置換",staffIds:["ling-luan"],detail:"鶕綾逐筆核對未退租姓名的因果線，將牆內索償執念置換至象徵清償紀錄，使十六道敲牆回應依序停止。"}],
+  [],
+  [],
+  [{stage:"霧天邊界警戒",staffIds:["ming-hao"],detail:"冥濠於夜間沿溪線與山徑巡查，以狼嚎確認霧中異常未越界，並封鎖十四個會自動回應房客姓名的危險點。"}],
+  [],
+  [],
+  [],
+]
 
 const caseDetails = [
   {
@@ -23,7 +33,7 @@ const caseDetails = [
     neighbor:"完成左右相鄰 4 戶訪談與共牆檢測；西側住戶的夜間敲擊聲已停止，無需安置。",
     method:"文字封緘、產權切離、二樓衣櫃定點封存",seal:"金箔線 18.4 m、黑墨 3 罐、白水晶 2 枚",
     final:"契約型殘留已完成剝離，污染降至可居住標準，同意重新進入銷售程序。",note:"二樓西側房間仍禁止於凌晨 03:17 開啟衣櫃。",
-    timeline:[{date:"1985.02.11",event:"首任屋主完成建物保存登記"},{date:"1998.04.17",event:"第二任屋主入住並增建西側房間"},{date:"2004.09.03",event:"首次通報夜間衣櫃內有腳步聲"},{date:"2011.12.21",event:"交屋前一日發生屋主死亡事件"},{date:"2026.07.16",event:"花楀完成產權附件與目擊紀錄建檔"},{date:"2026.07.18",event:"玳敕青確認異常與未完成契約重疊"},{date:"2026.07.19",event:"賀止損完成契約損耗清算"},{date:"2026.07.21",event:"午未核准解除封鎖並重新銷售"}],
+    timeline:[{date:"1985.02.11",event:"首任屋主完成建物保存登記"},{date:"1998.04.17",event:"第二任屋主入住並增建西側房間"},{date:"2004.09.03",event:"首次通報夜間衣櫃內有腳步聲"},{date:"2011.12.21",event:"交屋前一日發生屋主死亡事件"},{date:"2026.07.16",event:"花楀完成產權附件與目擊紀錄建檔"},{date:"2026.07.18",event:"玳敕青確認異常與未完成契約重疊"},{date:"2026.07.19",event:"鶕綾完成契約因果剝離，賀止損完成損耗清算"},{date:"2026.07.21",event:"午未核准解除封鎖並重新銷售"}],
     details:["確認繼承人出售需求，約定保留西側房間原狀。","比對三次移轉謄本，補登死亡前未完成附件。","測得二樓衣櫃內外空間差 17 公分，完成文字取樣。","切離產權執念並封存衣櫃內層，鄰戶同步觀測。","核銷衣櫃、牆紙與封緘材料損耗，完成繼承稅務註記。","覆核連續 48 小時污染曲線與西側共牆反應。","核准結案、解除封鎖並同意重新進入銷售程序。"],
   },
   {
@@ -32,7 +42,7 @@ const caseDetails = [
     neighbor:"完成巷內 5 戶聲學比對；敲擊僅沿本棟磚牆傳遞，鄰宅未受附著。",
     method:"磚牆聲紋定位、名冊抄錄、押金象徵清償",seal:"宣紙 48 張、銅錢 16 枚、灰泥 22 kg",
     final:"殘留已由活動型轉為靜止封存；因原始名冊無法取出，暫不解除封存標記。",note:"雨天請勿敲擊東側第三排紅磚，以免重新觸發回應。",
-    timeline:[{date:"1937.08.02",event:"建物作為六戶合租寓所啟用"},{date:"1945.10.19",event:"管理人失聯，押金名冊去向不明"},{date:"1972.03.06",event:"改建時以紅磚封閉原帳房"},{date:"2019.05.28",event:"住戶首次錄下牆內規律敲擊"},{date:"2026.06.08",event:"渚瀾與花楀受理家族封存委託"},{date:"2026.06.10",event:"玳敕青完成磚牆聲紋與姓名比對"},{date:"2026.06.12",event:"賀止損完成十六筆押金象徵清償"},{date:"2026.06.14",event:"午未核准保留封存、不開放拆牆"}],
+    timeline:[{date:"1937.08.02",event:"建物作為六戶合租寓所啟用"},{date:"1945.10.19",event:"管理人失聯，押金名冊去向不明"},{date:"1972.03.06",event:"改建時以紅磚封閉原帳房"},{date:"2019.05.28",event:"住戶首次錄下牆內規律敲擊"},{date:"2026.06.08",event:"渚瀾與花楀受理家族封存委託"},{date:"2026.06.10",event:"玳敕青完成磚牆聲紋與姓名比對"},{date:"2026.06.12",event:"鶕綾置換押金因果，賀止損完成十六筆象徵清償"},{date:"2026.06.14",event:"午未核准保留封存、不開放拆牆"}],
     details:["釐清家族僅申請止聲封存，暫不出售或拆牆。","整理族譜、舊租約照片與十六筆未退押金紀錄。","沿東牆逐磚記錄回聲，定位名冊所在區域。","依姓名順序完成象徵清償，再以灰泥回封聲源。","估列磚牆修補、名冊債務與施工停用損失。","確認敲擊頻率歸零，但名冊能量仍留在牆體。","核准列為低度封存資產，禁止未授權拆除。"],
   },
   {
@@ -59,7 +69,7 @@ const caseDetails = [
     neighbor:"完成上游 3 戶、登山口商店與巡山員訪談；異常未越過溪線，提供霧天撤離指引。",
     method:"住宿名冊除名、山徑界線重畫、霧天預約凍結",seal:"竹界樁 36 支、朱砂繩 92 m、空白房卡 14 張",
     final:"自動入住已停止，山徑仍保留低度回應；轉入 90 日觀察，不公開詳細墓址。",note:"濃霧時若櫃檯電話響一聲即停，請勿回撥或登記來電姓名。",
-    timeline:[{date:"1994.06.12",event:"青石山居民宿開始營業"},{date:"2001.03.27",event:"經營者首次將無主墓碑姓名抄入住客簿"},{date:"2010.10.10",event:"房客通報霧中有人索取房卡"},{date:"2023.02.05",event:"停止營業後住客簿仍自行增加姓名"},{date:"2026.04.09",event:"裘笈與渚瀾完成保密委託"},{date:"2026.04.12",event:"玳敕青確認名冊與山徑墓碑對應"},{date:"2026.04.15",event:"松聽簷完成除名與溪線界定"},{date:"2026.04.18",event:"午未核准轉入保密觀察"}],
+    timeline:[{date:"1994.06.12",event:"青石山居民宿開始營業"},{date:"2001.03.27",event:"經營者首次將無主墓碑姓名抄入住客簿"},{date:"2010.10.10",event:"房客通報霧中有人索取房卡"},{date:"2023.02.05",event:"停止營業後住客簿仍自行增加姓名"},{date:"2026.04.09",event:"裘芨與渚瀾完成保密委託"},{date:"2026.04.12",event:"玳敕青確認名冊與山徑墓碑對應"},{date:"2026.04.15",event:"松聽簷完成除名與溪線界定，冥濠接管霧天警戒"},{date:"2026.04.18",event:"午未核准轉入保密觀察"}],
     details:["與地主約定墓址保密及觀察期間暫停營業。","封存住客簿影本，將新增姓名與地籍外墓碑交叉比對。","於霧天沿山徑定位十四個回應點，確認未越過溪線。","逐筆撤銷住宿關係，重畫山徑界線並凍結預約系統。","清算停業損失、房卡耗材與山徑修復支出。","連續七次霧天未再新增姓名，保留季度複查。","核准轉入 90 日觀察並封存墓址資料。"],
   },
   {
@@ -77,7 +87,7 @@ const caseDetails = [
     neighbor:"完成同樓層 4 家公司與管理室檢測；異常僅存在原租戶網路及投影設備，已切離。",
     method:"幽靈工號註銷、設備資料清除、加班費象徵結算",seal:"資料封條 28 張、儲存碟 3 顆、金線 6.5 m",
     final:"虛構工號與設備殘留均已清除，商辦可正常使用及出售。",note:"不得將舊投影機備份檔重新接入公司內部網路。",
-    timeline:[{date:"2002.09.01",event:"商務中心八樓首次出租"},{date:"2015.01.05",event:"前租戶建立員工編號 E-000"},{date:"2018.12.28",event:"E-000 累積加班超過一萬小時"},{date:"2025.07.03",event:"會議室每日凌晨自動播放工作簡報"},{date:"2026.02.19",event:"褚日央與婪煙完成企業委託洽談"},{date:"2026.02.21",event:"玳敕青與婪煙確認殘留附著於投影系統"},{date:"2026.02.24",event:"裘笈與花楀完成工號註銷及資料切離"},{date:"2026.02.26",event:"午未核准恢復使用"}],
+    timeline:[{date:"2002.09.01",event:"商務中心八樓首次出租"},{date:"2015.01.05",event:"前租戶建立員工編號 E-000"},{date:"2018.12.28",event:"E-000 累積加班超過一萬小時"},{date:"2025.07.03",event:"會議室每日凌晨自動播放工作簡報"},{date:"2026.02.19",event:"褚日央與婪煙完成企業委託洽談"},{date:"2026.02.21",event:"玳敕青與婪煙確認殘留附著於投影系統"},{date:"2026.02.24",event:"裘芨與花楀完成工號註銷及資料切離"},{date:"2026.02.26",event:"午未核准恢復使用"}],
     details:["確認企業要求不中斷白天營運，安排夜間處理窗口。","調閱人資、門禁與薪資檔案，定位虛構工號 E-000。","比對投影設備快取與門禁紀錄，排除其他空間污染。","註銷工號、結清累積工時並銷毀三顆污染儲存碟。","核算設備更換、象徵加班費與夜間施工成本。","確認七日內投影設備未再自行啟動。","核准結案並同意恢復出租與出售。"],
   },
   {
@@ -86,7 +96,7 @@ const caseDetails = [
     neighbor:"完成全棟 5 戶用水點與頂樓檢測；更換共用濾芯後，其餘住戶夢境與水聲均恢復正常。",
     method:"水塔停用、家書取出、文字殘留逆向回收",seal:"濾芯 5 組、吸墨紙 120 張、銀線 14 m",
     final:"文字殘留已由管線完整回收，公共水塔恢復使用，物件可正常入住。",note:"取出的家書已交由委託人保管，不得再次浸水或帶回本棟。",
-    timeline:[{date:"1977.04.30",event:"白榕巷公寓完工並啟用共用水塔"},{date:"1993.06.18",event:"前屋主將十二封家書藏入水塔夾層"},{date:"2009.09.09",event:"四樓住戶首次聽見水管傳出讀信聲"},{date:"2025.12.02",event:"全棟住戶陸續夢見相同收信地址"},{date:"2026.01.09",event:"松聽簷、裘笈與花楀完成住戶協調"},{date:"2026.01.11",event:"玳敕青定位水塔夾層文字源"},{date:"2026.01.14",event:"褚日央與婪煙完成逆向回收"},{date:"2026.01.17",event:"午未核准恢復供水並結案"}],
+    timeline:[{date:"1977.04.30",event:"白榕巷公寓完工並啟用共用水塔"},{date:"1993.06.18",event:"前屋主將十二封家書藏入水塔夾層"},{date:"2009.09.09",event:"四樓住戶首次聽見水管傳出讀信聲"},{date:"2025.12.02",event:"全棟住戶陸續夢見相同收信地址"},{date:"2026.01.09",event:"松聽簷、裘芨與花楀完成住戶協調"},{date:"2026.01.11",event:"玳敕青定位水塔夾層文字源"},{date:"2026.01.14",event:"褚日央與婪煙完成逆向回收"},{date:"2026.01.17",event:"午未核准恢復供水並結案"}],
     details:["取得五戶停水同意並安排臨時供水與住宿補貼。","彙整住戶夢境、管線圖與前屋主家族通信資料。","逐層測試用水點，確認文字由頂樓水塔向四樓集中。","停用水塔、取出家書並沿管線逆向回收文字殘留。","清算濾芯、水塔清潔、住戶安置與管線檢測費。","確認各戶用水與睡眠狀況連續 72 小時正常。","核准恢復供水、解除觀察並同意正常入住。"],
   },
 ]
@@ -102,7 +112,17 @@ export const properties:Property[]=records.map((r,i)=>{
   neighborHandling:d.neighbor,anomalyLevel:d.anomaly,status:d.status,handlerId:i%2?"song-tingyan":"dai-chiqing",coverImage:afterImage,beforeImage,afterImage,shortDescription:"表面條件良好，但現場紀錄與產權資料存在無法以一般屋況解釋的落差。",incidentSummary:d.summary,
   pollutionBefore:d.metrics[0],pollutionAfter:d.metrics[1],stabilityBefore:d.metrics[2],stabilityAfter:d.metrics[3],spiritualActivityBefore:d.metrics[4],spiritualActivityAfter:d.metrics[5],contractIntegrityBefore:d.metrics[6],contractIntegrityAfter:d.metrics[7],handlingMethod:d.method,sealConsumption:d.seal,finalDetermination:d.final,cautionNote:d.note,
   availableForSale:![2,5].includes(i),tags:[r.type,d.anomaly,i%2?"夜間限制":"已勘查"],completedAt:d.completedAt,timeline:d.timeline,
-  handlingStages:[{stage:"案件洽談",staffIds:consultationTeams[i],detail:d.details[0]},{stage:"案件建檔",staffIds:["hua-yu"],detail:d.details[1]},{stage:"現場前期勘查",staffIds:surveyTeams[i],detail:d.details[2]},{stage:"現場異常處置",staffIds:responseTeams[i],detail:d.details[3]},{stage:"資產清點與損耗清算",staffIds:["he-zhishun"],detail:d.details[4]},...(highestRiskCases.has(i)?[{stage:"最高風險現場安全",staffIds:["ming-hao"],detail:"冥濠統籌封鎖線、出入管制、撤離動線與現場人員安全確認。"}]:[]),{stage:"處置覆核",staffIds:["zhu-lan"],detail:d.details[5]},{stage:"最終簽核",staffIds:["wu-wei"],detail:d.details[6]}],
+  handlingStages:[{stage:"案件洽談",staffIds:consultationTeams[i],detail:d.details[0]},{stage:"案件建檔",staffIds:["hua-yu"],detail:d.details[1]},{stage:"現場前期勘查",staffIds:surveyTeams[i],detail:d.details[2]},{stage:"現場異常處置",staffIds:responseTeams[i],detail:d.details[3]},...specialistStages[i],{stage:"資產清點與損耗清算",staffIds:["he-zhishun"],detail:d.details[4]},...(highestRiskCases.has(i)?[{stage:"最高風險現場安全",staffIds:["ming-hao"],detail:"冥濠統籌封鎖線、出入管制、撤離動線與現場人員安全確認。"}]:[]),{stage:"處置覆核",staffIds:["zhu-lan"],detail:d.details[5]},{stage:"最終簽核",staffIds:["wu-wei"],detail:d.details[6]}],
   }
 })
+
+const minimumCasesPerStaff=4
+const staffCaseCounts=new Map<string,number>()
+for(const property of properties){
+  const participants=new Set(property.handlingStages.flatMap(stage=>stage.staffIds))
+  for(const staffId of participants)staffCaseCounts.set(staffId,(staffCaseCounts.get(staffId)??0)+1)
+}
+const underrepresentedStaff=["dai-chiqing","he-zhishun","ming-hao","wu-wei","lan-yan","song-tingyan","zhu-lan","hua-yu","ju-qi","chu-riyang","ling-luan"].filter(staffId=>(staffCaseCounts.get(staffId)??0)<minimumCasesPerStaff)
+if(underrepresentedStaff.length)throw new Error(`每位員工必須參與至少 ${minimumCasesPerStaff} 間不同物件，目前未達標：${underrepresentedStaff.join(", ")}`)
+
 export const getProperty=(id:string)=>properties.find(p=>p.id===id)

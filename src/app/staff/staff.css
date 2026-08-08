@@ -2,6 +2,7 @@
   display: block;
   width: min(1180px, 100%);
   max-width: 1180px;
+  max-height: calc(100dvh - 40px);
   padding: 0;
   overflow: hidden;
 }
@@ -83,26 +84,62 @@
   display: grid;
   grid-template-columns: minmax(300px, 410px) minmax(0, 1fr);
   align-items: start;
-  max-height: 90vh;
+  max-height: calc(100dvh - 40px);
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: contain;
+}
+
+.staff-modal-image {
+  position: relative;
+  width: min(100%, 410px, calc(66.6667dvh - 26.6667px));
+  min-height: 0;
+  max-height: calc(100dvh - 40px);
+  aspect-ratio: 2 / 3;
+  align-self: start;
+  justify-self: center;
+  overflow: hidden;
+  background: #0d1012;
+}
+
+.staff-modal-image img {
+  object-fit: contain;
+}
+
+.staff-modal-copy {
+  max-height: calc(100dvh - 40px);
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
 }
 
-.staff-modal-image {
-  position: relative;
-  width: 100%;
-  min-height: 0;
-  aspect-ratio: 9 / 16;
-  align-self: start;
-  overflow: hidden;
-  background: #0d1012;
+.staff-personality h3,
+.staff-companion h3 {
+  margin: 22px 0 4px;
+  color: var(--gold);
+  font-size: 15px;
+  letter-spacing: .08em;
 }
 
-.staff-modal-image img {
-  object-fit: cover;
+.staff-personality p,
+.staff-companion p {
+  margin: 0;
+  color: #c6c5c0;
+  font-size: 13px;
+  line-height: 1.85;
 }
+
+.staff-companion {
+  margin: 24px 0;
+  padding: 18px;
+  border: 1px solid rgba(181,154,98,.35);
+  background: rgba(181,154,98,.06);
+}
+
+.staff-companion small { color: var(--gold); letter-spacing: .18em; }
+.staff-companion h3 { margin-top: 8px; font-size: 22px; }
+.staff-companion h3 span { display: block; color: var(--mist); font: 11px Arial; }
 
 .staff-creator-links {
   margin: 18px 0 20px;
@@ -261,12 +298,21 @@
 
   .staff-modal-scroll {
     grid-template-columns: 1fr;
+    max-height: calc(100dvh - 16px);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
   }
 
   .staff-modal-image {
-    width: min(100%, 360px);
+    width: min(100%, 360px, calc(66.6667dvh - 10.6667px));
+    max-height: calc(100dvh - 16px);
     min-height: 0;
     justify-self: center;
+  }
+
+  .staff-modal-copy {
+    max-height: none;
+    overflow: visible;
   }
 
   .friendship-thanks {
