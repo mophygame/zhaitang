@@ -30,13 +30,13 @@ export const staff: StaffMember[] = [
     confidentialNote:"不得移除右耳靜月石。每日零點是私人時間，請勿打擾。",
   },
   {
-    id:"wu-wei", employeeNumber:"ZT-004", name:"午未", englishName:"Wu Wei", title:"幕後老闆", department:"經營管理室",
+    id:"wu-wei", employeeNumber:"ZT-004", name:"午未", englishName:"Wu Wei", title:"店東", department:"經營管理室",
     ageDisplay:"未公開", height:"168 cm", weight:"60 kg",
     personality:"玩世不恭、不務正業、隨心所欲、話癆又毒舌。最愛逛市集與排限量甜點，尤其喜歡全糖草莓大福與生乳捲；桌案上的文件總堆得像山。",
     specialty:["各種決策","重大案件核准","特殊物件收購","甜點情報蒐集"],
-    description:"齋堂房屋的幕後老闆。工作常處理到一半便不見人影；若要找他，去甜點名店的排隊人龍裡通常最快。",
+    description:"齋堂房屋的店東。工作常處理到一半便不見人影；若要找他，去甜點名店的排隊人龍裡通常最快。",
     quote:"「先吃完再說。」", portrait:"/images/employees/wu-wei.webp", caseCount:312, successRate:100, status:"在職",
-    confidentialNote:"真身與年齡均未公開。公司文件若無故散落，請直接交給其他人，勿期待本人處理。",
+    confidentialNote:"公司文件若無故散落，請直接交給其他人，勿期待本人處理。",
   },
   {
     id:"lan-yan", employeeNumber:"ZT-005", name:"婪煙", englishName:"Lan Yan", title:"陰濕型業務", department:"不動產業務部",
@@ -77,7 +77,7 @@ export const staff: StaffMember[] = [
   },
   {
     id:"ju-qi", employeeNumber:"ZT-009", name:"裘芨", englishName:"Ju Qi", title:"業務行銷經理", department:"業務銷售部",
-    ageDisplay:"未公開", height:"186 cm", weight:"83 kg",
+    ageDisplay:"約30歲", height:"186 cm", weight:"83 kg",
     personality:"張揚毒舌、愛錢又奸商，精通行銷話術，常因KPI未達標而焦慮，像極慣老闆又同時是厭世社畜。被誤認成算命師時會順勢算一卦，再敲詐一筆。",
     companion:{name:"喬治",kind:"金色小蟾蜍",description:"戴著小圓墨鏡的金色小蟾蜍。"},
     specialty:["業績管理","行銷話術","特殊物件銷售","算命議價"],
