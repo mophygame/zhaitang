@@ -21,6 +21,24 @@ type CallPhase = "dialing" | "ringing" | "operator" | "transferring" | "connecte
 type PhoneCallContextValue = { callExtension: (staffId: string) => void; callMain: () => void }
 type SpeechVoiceKind = "operator" | "staff"
 type StaffVoiceProfile = { pitch:number; rate:number; voiceOffset:number }
+type RecordedDialogue = { file:string; text:string }
+const withMp3Extension=(file:string)=>file.toLowerCase().endsWith(".mp3")?file:`${file}.mp3`
+
+const normalizeDialogues=(value:unknown):RecordedDialogue[]=>{
+  const source=value&&typeof value==="object"&&!Array.isArray(value)&&"dialogues" in value
+    ? (value as {dialogues:unknown}).dialogues:value
+  if(Array.isArray(source))return source.flatMap((item,index)=>{
+    if(typeof item==="string")return [{file:`${String(index+1).padStart(2,"0")}.mp3`,text:item}]
+    if(!item||typeof item!=="object")return []
+    const entry=item as Record<string,unknown>
+    const file=entry.file??entry.audio??entry.src
+    const text=entry.text??entry.dialogue??entry.content
+    return typeof file==="string"&&typeof text==="string"?[{file:withMp3Extension(file),text}]:[]
+  })
+  if(source&&typeof source==="object")return Object.entries(source as Record<string,unknown>)
+    .flatMap(([file,text])=>typeof text==="string"?[{file:withMp3Extension(file),text}]:[])
+  return []
+}
 
 const staffVoiceProfiles:Record<string,StaffVoiceProfile> = {
   "dai-chiqing":{pitch:.94,rate:.84,voiceOffset:0}, "he-zhishun":{pitch:.91,rate:.9,voiceOffset:1},
@@ -53,6 +71,9 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const timers = useRef<number[]>([])
   const ringInterval = useRef<number | null>(null)
   const audioContext = useRef<AudioContext | null>(null)
+  const recordedAudio = useRef<HTMLAudioElement | null>(null)
+  const dialogueCache = useRef(new Map<string,Promise<RecordedDialogue[]>>())
+  const callSession = useRef(0)
 
   const stopRing = useCallback(() => {
     if (ringInterval.current !== null) window.clearInterval(ringInterval.current)
@@ -60,13 +81,27 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const clearAudio = useCallback(() => {
+    callSession.current+=1
     timers.current.forEach(window.clearTimeout)
     timers.current = []
     stopRing()
     window.speechSynthesis?.cancel()
+    if(recordedAudio.current){recordedAudio.current.pause();recordedAudio.current.src=""}
+    recordedAudio.current=null
     if (audioContext.current) void audioContext.current.close()
     audioContext.current = null
   }, [stopRing])
+
+  const loadRecordedDialogues=useCallback((member:StaffMember)=>{
+    const cached=dialogueCache.current.get(member.name)
+    if(cached)return cached
+    const request=fetch(`/assets/voice/${encodeURIComponent(member.name)}/dialogue.json`)
+      .then(response=>response.ok?response.json():Promise.reject())
+      .then(normalizeDialogues)
+      .catch(()=>[])
+    dialogueCache.current.set(member.name,request)
+    return request
+  },[])
 
   const hangUp = useCallback(() => {
     clearAudio()
@@ -178,24 +213,49 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     setPhase("connected")
     setElapsed(0)
     setExtensionInput("")
-    const pool = extensionScripts[member.id] ?? [member.quote.replace(/[「」]/g, "")]
-    const lines = [...pool].sort(() => Math.random() - .5).slice(0, 3)
-    const playLine = (index: number) => {
-      const line = lines[index]
-      setTranscript(line)
-      speak(line, () => {
-        if (index === lines.length - 1) {
-          const endTimer = window.setTimeout(hangUp, 350)
-          timers.current.push(endTimer)
-          return
+    const session=callSession.current
+    void loadRecordedDialogues(member).then(recorded=>{
+      if(session!==callSession.current)return
+      const syntheticPool=extensionScripts[member.id]??[member.quote.replace(/[「」]/g,"")]
+      const useRecorded=recorded.length>0
+      const pool=useRecorded?recorded:syntheticPool.map((text,index)=>({file:"",text,index}))
+      const shuffled=[...pool].sort(()=>Math.random()-.5)
+      const lines=Array.from({length:3},(_,index)=>shuffled[index%shuffled.length])
+      const playLine=(index:number)=>{
+        if(session!==callSession.current)return
+        const line=lines[index]
+        setTranscript(line.text)
+        const finished=()=>{
+          if(session!==callSession.current)return
+          if(index===lines.length-1){
+            // Reserved for a future recorded hang-up effect before closing.
+            const endTimer=window.setTimeout(hangUp,350)
+            timers.current.push(endTimer)
+            return
+          }
+          const delay=index===0?wait(2000,3000):wait(1000,3000)
+          const nextTimer=window.setTimeout(()=>playLine(index+1),delay)
+          timers.current.push(nextTimer)
         }
-        const delay = index === 0 ? wait(2000, 3000) : wait(1000, 3000)
-        const nextTimer = window.setTimeout(() => playLine(index + 1), delay)
-        timers.current.push(nextTimer)
-      }, "staff", member.id)
-    }
-    playLine(0)
-  }, [hangUp, speak, stopRing])
+        if(!useRecorded){speak(line.text,finished,"staff",member.id);return}
+        const audio=new Audio(`/assets/voice/${encodeURIComponent(member.name)}/${line.file.split("/").map(encodeURIComponent).join("/")}`)
+        recordedAudio.current=audio
+        audio.preload="auto"
+        let fallbackStarted=false
+        const fallback=()=>{
+          if(fallbackStarted)return
+          fallbackStarted=true
+          audio.onended=null
+          audio.onerror=null
+          speak(line.text,finished,"staff",member.id)
+        }
+        audio.onended=finished
+        audio.onerror=fallback
+        void audio.play().catch(fallback)
+      }
+      playLine(0)
+    })
+  }, [hangUp, loadRecordedDialogues, speak, stopRing])
 
   const enterVoicemail = useCallback(() => {
     stopRing()
