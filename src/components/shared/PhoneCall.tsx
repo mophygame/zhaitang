@@ -425,13 +425,13 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     if (phase !== "operator") return
     const toneIndex = key === "*" ? 10 : key === "#" ? 11 : Number(key)
     tone(620 + toneIndex * 22, .1, .026)
-    if (key === "*") {
-      setExtensionInput("*")
+    if (key === "#") {
+      setExtensionInput("#")
       setTranscript("請輸入三位數分機號碼。")
       speak("請輸入三位數分機號碼。")
       return
     }
-    if (extensionInput.startsWith("*")) {
+    if (extensionInput.startsWith("#")) {
       if (!/^\d$/.test(key)) return
       const nextInput = `${extensionInput}${key}`.slice(0, 4)
       setExtensionInput(nextInput)

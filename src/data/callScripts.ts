@@ -64,4 +64,4 @@ export const serviceOptions = [
   { digit: "5", label: "高危現場與緊急安全", staffIds: ["ming-hao", "ling-luan"] },
 ] as const
 
-export const operatorMenuScript = "特殊物件初步諮詢請按一；案件進度與文件請按二；房屋買賣與交屋服務請按三；費用、損耗與退款請按四；高危現場與緊急安全請按五。若要撥打員工分機，請按星號，再輸入三位數分機號碼。"
+export const operatorMenuScript = "特殊物件初步諮詢請按一；案件進度與文件請按二；房屋買賣與交屋服務請按三；費用、損耗與退款請按四；高危現場與緊急安全請按五。若要撥打員工分機，請按井字號，再輸入三位數分機號碼。"
