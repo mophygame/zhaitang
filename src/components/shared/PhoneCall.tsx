@@ -91,6 +91,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const [dialedNumber, setDialedNumber] = useState("04-2317-0317")
   const [extensionInput, setExtensionInput] = useState("")
   const timers = useRef<number[]>([])
+  const extensionResolutionTimer = useRef<number | null>(null)
   const ringInterval = useRef<number | null>(null)
   const audioContext = useRef<AudioContext | null>(null)
   const recordedAudio = useRef<HTMLAudioElement | null>(null)
@@ -107,6 +108,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     callSession.current+=1
     timers.current.forEach(window.clearTimeout)
     timers.current = []
+    extensionResolutionTimer.current=null
     stopRing()
     window.speechSynthesis?.cancel()
     if(recordedAudio.current){
@@ -212,6 +214,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       return
     }
     window.speechSynthesis.cancel()
+    window.speechSynthesis.resume()
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = "zh-TW"
     const staffVoice = staffVoiceProfiles[staffId ?? ""] ?? {pitch:.72,rate:.86,voiceOffset:0}
@@ -322,8 +325,9 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     stopRing()
     setPhase("voicemail")
     const leaveMessagePrompt = "嗶聲之後請留言。"
-    setTranscript(`${voicemailScript}${leaveMessagePrompt}`)
-    speak(voicemailScript, () => speak(leaveMessagePrompt, () => tone(880, .32, .055)))
+    const fullPrompt=`${voicemailScript}${leaveMessagePrompt}`
+    setTranscript(fullPrompt)
+    speak(fullPrompt, () => tone(880, .32, .055))
   }, [speak, stopRing, tone])
 
   const enterAnomaly = useCallback(() => {
@@ -426,6 +430,10 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     const toneIndex = key === "*" ? 10 : key === "#" ? 11 : Number(key)
     tone(620 + toneIndex * 22, .1, .026)
     if (key === "#") {
+      if(extensionResolutionTimer.current!==null){
+        window.clearTimeout(extensionResolutionTimer.current)
+        extensionResolutionTimer.current=null
+      }
       setExtensionInput("#")
       setTranscript("請輸入三位數分機號碼。")
       speak("請輸入三位數分機號碼。")
@@ -433,19 +441,28 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     }
     if (extensionInput.startsWith("#")) {
       if (!/^\d$/.test(key)) return
+      if(extensionResolutionTimer.current!==null){
+        window.clearTimeout(extensionResolutionTimer.current)
+        extensionResolutionTimer.current=null
+      }
       const nextInput = `${extensionInput}${key}`.slice(0, 4)
       setExtensionInput(nextInput)
       if (nextInput.length === 4) {
         const extension = `#${nextInput.slice(1)}`
         const staffId = Object.entries(staffExtensions).find(([, value]) => value === extension)?.[0]
         const member = staff.find(item => item.id === staffId)
-        if (member) routeTo(member)
-        else {
-          setPhase("unknown")
-          setDialedNumber(extension)
-          setTranscript(unknownScript)
-          speak(unknownScript)
-        }
+        const resolutionTimer=window.setTimeout(()=>{
+          extensionResolutionTimer.current=null
+          if (member) routeTo(member)
+          else {
+            setPhase("unknown")
+            setDialedNumber(extension)
+            setTranscript(unknownScript)
+            speak(unknownScript)
+          }
+        },900)
+        extensionResolutionTimer.current=resolutionTimer
+        timers.current.push(resolutionTimer)
       }
       return
     }
@@ -455,6 +472,17 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     const member = staff.find(item => item.id === staffId)
     if (member) routeTo(member)
   }, [extensionInput, phase, routeTo, speak, tone])
+
+  const deleteExtensionDigit=useCallback(()=>{
+    if(phase!=="operator"||!extensionInput.startsWith("#")||extensionInput.length<=1)return
+    if(extensionResolutionTimer.current!==null){
+      window.clearTimeout(extensionResolutionTimer.current)
+      extensionResolutionTimer.current=null
+    }
+    tone(520,.08,.022)
+    setExtensionInput(value=>value.slice(0,-1))
+    setTranscript("請輸入三位數分機號碼。")
+  },[extensionInput,phase,tone])
 
   const callExtension = useCallback((staffId: string) => begin(staffId), [begin])
   const callMain = useCallback(() => begin(), [begin])
@@ -476,7 +504,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     {phase==="voicemail"&&<div className="phone-call-recipient voicemail"><span>{recipient?`${getStaffExtension(recipient.id)} · VOICE MAIL`:"VOICE MAIL"}</span><h3>{recipient?`${recipient.name}｜語音留言`:"語音留言"}</h3><p>情境模擬・不會實際錄音</p></div>}
     {!recipient&&(phase==="unknown"||phase==="anomaly")&&<div className="phone-call-recipient unknown"><span>EXT. ???</span><h3>{phase==="unknown"?"未知分機":"無法辨識"}</h3></div>}
     {transcript&&<blockquote>「{transcript}」</blockquote>}
-    {phase==="operator"&&<div className="phone-keypad" aria-label="電話鍵盤">{keypad.map(([key,letters])=><button type="button" key={key} onClick={()=>handleKey(key)} aria-label={`按鍵 ${key}`}><b>{key}</b>{letters&&<small>{letters}</small>}</button>)}</div>}
+    {phase==="operator"&&<div className="phone-keypad" aria-label="電話鍵盤">{keypad.map(([key,letters])=><button type="button" key={key} onClick={()=>handleKey(key)} aria-label={`按鍵 ${key}`}><b>{key}</b>{letters&&<small>{letters}</small>}</button>)}<button type="button" className="phone-keypad-delete" onClick={deleteExtensionDigit} disabled={!extensionInput.startsWith("#")||extensionInput.length<=1} aria-label="刪除上一個分機數字"><b>⌫</b><small>刪除</small></button></div>}
     <button className="hang-up" onClick={hangUp}><Phone/>掛斷</button>
   </section></div>}</PhoneCallContext.Provider>
 }
