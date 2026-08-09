@@ -21,7 +21,7 @@ type CallPhase = "dialing" | "ringing" | "operator" | "transferring" | "connecte
 type PhoneCallContextValue = { callExtension: (staffId: string) => void; callMain: () => void }
 type SpeechVoiceKind = "operator" | "staff"
 type StaffVoiceProfile = { pitch:number; rate:number; voiceOffset:number }
-type DialogueCategory = "接電話用" | "中間聊天用" | "掛電話用"
+type DialogueCategory = "接電話用" | "中間聊天用" | "掛電話用" | "語音信箱"
 type RecordedDialogue = { file:string; text:string; category?:DialogueCategory }
 type VoiceManifest = Record<string,string[]>
 const withMp3Extension=(file:string)=>file.toLowerCase().endsWith(".mp3")?file:`${file}.mp3`
@@ -43,7 +43,7 @@ const normalizeDialogues=(value:unknown):RecordedDialogue[]=>{
     ? container.categories as Partial<Record<DialogueCategory,unknown>>:{}
   const categoryFor=(file:string):DialogueCategory|undefined=>{
     const filename=file.replace(/\.mp3$/i,"")
-    return (["接電話用","中間聊天用","掛電話用"] as const)
+    return (["接電話用","中間聊天用","掛電話用","語音信箱"] as const)
       .find(category=>Array.isArray(categoryLists[category])&&(categoryLists[category] as unknown[]).includes(filename))
   }
   if(Array.isArray(source))return source.flatMap((item,index)=>{
@@ -92,6 +92,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
   const [extensionInput, setExtensionInput] = useState("")
   const timers = useRef<number[]>([])
   const extensionResolutionTimer = useRef<number | null>(null)
+  const speechStartTimer = useRef<number | null>(null)
   const ringInterval = useRef<number | null>(null)
   const audioContext = useRef<AudioContext | null>(null)
   const recordedAudio = useRef<HTMLAudioElement | null>(null)
@@ -109,6 +110,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     timers.current.forEach(window.clearTimeout)
     timers.current = []
     extensionResolutionTimer.current=null
+    speechStartTimer.current=null
     stopRing()
     window.speechSynthesis?.cancel()
     if(recordedAudio.current){
@@ -213,8 +215,13 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       timers.current.push(fallbackTimer)
       return
     }
-    window.speechSynthesis.cancel()
-    window.speechSynthesis.resume()
+    const synthesis=window.speechSynthesis
+    if(speechStartTimer.current!==null){
+      window.clearTimeout(speechStartTimer.current)
+      speechStartTimer.current=null
+    }
+    const restartRequired=synthesis.speaking||synthesis.pending
+    synthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = "zh-TW"
     const staffVoice = staffVoiceProfiles[staffId ?? ""] ?? {pitch:.72,rate:.86,voiceOffset:0}
@@ -239,7 +246,16 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     utterance.onerror = event => {
       if (event.error !== "canceled" && event.error !== "interrupted") onEnd?.()
     }
-    window.speechSynthesis.speak(utterance)
+    const startSpeaking=()=>{
+      speechStartTimer.current=null
+      synthesis.resume()
+      synthesis.speak(utterance)
+    }
+    if(restartRequired){
+      const restartTimer=window.setTimeout(startSpeaking,80)
+      speechStartTimer.current=restartTimer
+      timers.current.push(restartTimer)
+    }else startSpeaking()
   }, [])
 
   const playNoise = useCallback(() => {
@@ -321,14 +337,48 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     })
   }, [hangUp, loadRecordedDialogues, playPhoneEffect, speak, stopRing])
 
-  const enterVoicemail = useCallback(() => {
+  const enterVoicemail = useCallback((member:StaffMember) => {
     stopRing()
     setPhase("voicemail")
     const leaveMessagePrompt = "嗶聲之後請留言。"
     const fullPrompt=`${voicemailScript}${leaveMessagePrompt}`
-    setTranscript(fullPrompt)
-    speak(fullPrompt, () => tone(880, .32, .055))
-  }, [speak, stopRing, tone])
+    setTranscript("")
+    const session=callSession.current
+    let promptCompleted=false
+    const afterPrompt=()=>{
+      if(promptCompleted)return
+      promptCompleted=true
+      if(session!==callSession.current)return
+      const audio=recordedAudio.current??new Audio()
+      recordedAudio.current=audio
+      let beepCompleted=false
+      const afterBeep=()=>{
+        if(beepCompleted)return
+        beepCompleted=true
+        if(session!==callSession.current)return
+        const hangupTimer=window.setTimeout(()=>{
+          if(session===callSession.current)playPhoneEffect("handup",hangUp)
+        },wait(1000,2000))
+        timers.current.push(hangupTimer)
+      }
+      playAudioSource(audio,"/assets/voice/phone_voicemail_beep_sound.mp3",afterBeep)
+    }
+    void loadRecordedDialogues(member).then(dialogues=>{
+      if(session!==callSession.current)return
+      const voicemailPool=dialogues.filter(dialogue=>dialogue.category==="語音信箱")
+      if(voicemailPool.length===0){
+        setTranscript(fullPrompt)
+        speak(fullPrompt,afterPrompt)
+        return
+      }
+      const dialogue=voicemailPool[Math.floor(Math.random()*voicemailPool.length)]
+      setTranscript(dialogue.text||`${member.name} 語音信箱播放中……`)
+      const audio=recordedAudio.current??new Audio()
+      recordedAudio.current=audio
+      const source=`/assets/voice/${encodeURIComponent(member.name)}/${dialogue.file.split("/").map(encodeURIComponent).join("/")}`
+      playAudioSource(audio,source,afterPrompt)
+    })
+  }, [hangUp, loadRecordedDialogues, playPhoneEffect, speak, stopRing])
 
   const enterAnomaly = useCallback(() => {
     stopRing()
@@ -355,7 +405,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     const finishTransfer = window.setTimeout(() => {
       const roll = Math.random()
       if (roll < .03) enterAnomaly()
-      else if (roll < .3) enterVoicemail()
+      else if (roll < .3) enterVoicemail(member)
       else connectTo(member)
     }, wait(3000, 4800))
     timers.current.push(startTransferRing, finishTransfer)
@@ -368,14 +418,11 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       setDialedNumber(getStaffExtension(member.id))
       setPhase("busy")
       setTranscript(busyScript)
-      speak(busyScript,()=>{
-        const voicemailTimer=window.setTimeout(enterVoicemail,450)
-        timers.current.push(voicemailTimer)
-      })
+      speak(busyScript,()=>playPhoneEffect("handup",hangUp))
       return
     }
     transferTo(member)
-  }, [enterVoicemail, speak, stopRing, transferTo])
+  }, [hangUp, playPhoneEffect, speak, stopRing, transferTo])
 
   const enterOperator = useCallback(() => {
     stopRing()
