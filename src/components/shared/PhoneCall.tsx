@@ -417,9 +417,24 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     synthesis.speak(primer)
   },[])
 
+  const primeRecordedAudio=useCallback(()=>{
+    const audio=new Audio("/assets/voice/phone_take_sound_1.mp3")
+    audio.preload="auto"
+    audio.muted=true
+    recordedAudio.current=audio
+    const restore=()=>{
+      if(recordedAudio.current!==audio)return
+      audio.pause()
+      audio.currentTime=0
+      audio.muted=false
+    }
+    void audio.play().then(restore).catch(()=>{audio.muted=false})
+  },[])
+
   const begin = useCallback((staffId?: string) => {
     clearAudio()
     primeSpeechSynthesis()
+    primeRecordedAudio()
     setOpen(true)
     setPhase("dialing")
     setRecipient(null)
@@ -440,7 +455,7 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
       } else enterOperator()
     }, staffId ? 2400 : wait(3000, 6000))
     timers.current.push(dialingTimer, resolutionTimer)
-  }, [clearAudio, connectTo, enterOperator, primeSpeechSynthesis, ring, tone])
+  }, [clearAudio, connectTo, enterOperator, primeRecordedAudio, primeSpeechSynthesis, ring, tone])
 
   const handleKey = useCallback((key: string) => {
     if (phase !== "operator") return
