@@ -3,4 +3,4 @@
 :HL["/_next/static/css/5ef42f69fa99deb7.css","style"]
 :HL["/_next/static/css/1ad0e2a6eec46b28.css","style"]
 :HL["/_next/static/css/2733d054ccb3cc37.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"properties","param":null,"prefetchHints":0,"slots":{"children":{"name":"id","param":{"type":"d","key":"zt-55","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"zQMdcgICTikH_bb2ENJlC"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"properties","param":null,"prefetchHints":0,"slots":{"children":{"name":"id","param":{"type":"d","key":"zt-55","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"J-2mWnjweoGab3UYrd_HB"}

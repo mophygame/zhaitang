@@ -258,25 +258,6 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     }else startSpeaking()
   }, [])
 
-  const playNoise = useCallback(() => {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext
-    if (!AudioContextClass) return
-    const context = audioContext.current ?? new AudioContextClass()
-    audioContext.current = context
-    const buffer = context.createBuffer(1, context.sampleRate * 2.6, context.sampleRate)
-    const data = buffer.getChannelData(0)
-    for (let index = 0; index < data.length; index += 1) data[index] = (Math.random() * 2 - 1) * (1 - index / data.length)
-    const source = context.createBufferSource()
-    const filter = context.createBiquadFilter()
-    const gain = context.createGain()
-    source.buffer = buffer
-    filter.type = "bandpass"
-    filter.frequency.value = 680
-    gain.gain.value = .055
-    source.connect(filter).connect(gain).connect(context.destination)
-    source.start()
-  }, [])
-
   const connectTo = useCallback((member: StaffMember) => {
     stopRing()
     setRecipient(member)
@@ -380,16 +361,6 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     })
   }, [hangUp, loadRecordedDialogues, playPhoneEffect, speak, stopRing])
 
-  const enterAnomaly = useCallback(() => {
-    stopRing()
-    setRecipient(null)
-    setPhase("anomaly")
-    setTranscript("訊號來源無法辨識。通話將自動中斷。")
-    playNoise()
-    const autoHangup = window.setTimeout(hangUp, 3200)
-    timers.current.push(autoHangup)
-  }, [hangUp, playNoise, stopRing])
-
   const transferTo = useCallback((member: StaffMember) => {
     stopRing()
     setRecipient(member)
@@ -404,12 +375,11 @@ export function PhoneCallProvider({ children }: { children: React.ReactNode }) {
     }, 900)
     const finishTransfer = window.setTimeout(() => {
       const roll = Math.random()
-      if (roll < .03) enterAnomaly()
-      else if (roll < .3) enterVoicemail(member)
+      if (roll < .27) enterVoicemail(member)
       else connectTo(member)
     }, wait(3000, 4800))
     timers.current.push(startTransferRing, finishTransfer)
-  }, [connectTo, enterAnomaly, enterVoicemail, ring, speak, stopRing])
+  }, [connectTo, enterVoicemail, ring, speak, stopRing])
 
   const routeTo = useCallback((member: StaffMember) => {
     if (Math.random() < .08) {
