@@ -1,5 +1,12 @@
 "use client";import Image from "@/components/shared/AppImage";import Link from "next/link";import {OutwardArrow} from "@/components/shared/OutwardArrow";import {properties} from "@/data/properties";import {BeforeAfterSlider,PropertyGrid,PropertySearch} from "@/components/properties/PropertyComponents";import {SectionTitle,useCommission} from "@/components/shared/UI";
-export default function Home(){const commission=useCommission();const featured=properties.slice(0,4);const services=[["/assets/icons/01.svg","特殊物件勘查"],["/assets/icons/02.svg","歷史與產權溯源"],["/assets/icons/03.svg","靈異殘留鑑定"],["/assets/icons/04.svg","凶宅清理與封存"],["/assets/icons/05.svg","契約與損耗清算"],["/assets/icons/06.svg","重新包裝與出售"]] as const;return <>
+export default function Home(){const commission=useCommission();const featured=properties.slice(0,4);const services=[
+["/assets/icons/01.svg","特殊物件勘查","進場確認結構、異常範圍與人員風險，建立初步現場紀錄。"],
+["/assets/icons/02.svg","歷史與產權溯源","比對謄本、歷次交易與土地沿革，釐清物件過去與權利關係。"],
+["/assets/icons/03.svg","靈異殘留鑑定","依影像、聲響與空間反應，判定殘留類型、強度及影響範圍。"],
+["/assets/icons/04.svg","凶宅清理與封存","依危險等級執行淨化、隔離與封存，避免異常持續擴散。"],
+["/assets/icons/05.svg","契約與損耗清算","核對契約責任、修繕損耗與處置費用，完成案件財務清算。"],
+["/assets/icons/06.svg","重新包裝與出售","整理屋況揭露、銷售定位與帶看規範，讓完成處置的物件重新上市。"],
+] as const;return <>
 <section className="hero">
 <Image src="/images/84D62DE0-0F7C-496B-9323-1AE64B102D18.webp" alt="暮色中的齋堂精選宅邸" fill preload sizes="100vw"/>
 <div className="hero-shade"/>
@@ -32,12 +39,12 @@ export default function Home(){const commission=useCommission();const featured=p
 </section>
 <section className="section services-section">
 <SectionTitle eyebrow="SCOPE OF SERVICE" title="從勘查到重新出售"/>
-<div className="services">{services.map(([icon,name],i)=>
+<div className="services">{services.map(([icon,name,description],i)=>
 <div key={name}>
 <Image src={icon} width={32} height={32} alt="" aria-hidden="true"/>
 <span>0{i+1}</span>
 <h3>{name}</h3>
-<p>依現場風險、產權重疊與殘留程度建立專案紀錄。</p>
+<p>{description}</p>
 </div>)}</div>
 </section>
 <section className="section comparison">
