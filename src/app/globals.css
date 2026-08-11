@@ -139,6 +139,15 @@ video {
 }
 
 @media (max-width: 768px) {
+  .services-section {
+    padding-inline: 0;
+  }
+
+  .services-section > .section-title {
+    width: 92vw;
+    margin-inline: auto;
+  }
+
   button,
   .gold-button,
   [role="button"] {

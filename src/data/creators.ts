@@ -157,7 +157,7 @@ zhaitangCreators[9]={
 }
 friendshipCreators[0]={
   ...friendshipCreators[0],
-  discordUrl:"https://discord.gg/5Q94M7Gtua",
+  discordUrl:"https://discord.gg/9h9AbBkrU",
   profileUrl:"https://caveduck.io/user/H_mori",
   recommendedWorks:[
     {title:"真實瑟瑟聲音工作室",hashtags:["NSFW","劇情","高肉"],url:"",image:"/assets/work/黃森_真實瑟瑟聲音工作室.gif"},
