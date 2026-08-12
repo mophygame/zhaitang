@@ -69,7 +69,7 @@ zhaitangCreators[2]={
   recommendedWorks:[
     {title:"《寄生：培育》",hashtags:["怪","可愛","人外"],url:"https://h5.touchieai.com/character?code=8bd89ce0-1574-48b3-aa08-6b7e1057aaf5",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_《寄生：培育》.webp"},
     {title:"《寄生：甦醒》",hashtags:["異想天開","無厘頭"],url:"https://h5.touchieai.com/character?code=84810468-3e24-48fe-87cc-d099caa8fe20",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_《寄生：甦醒》.webp"},
-    {title:"錦霽",hashtags:["怪","精神狀態良好"],url:"https://h5.touchieai.com/character?code=6062f167-b9df-4d19-b243-76d88c82a8af",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_錦霽.webp"},
+    {title:"錦霽",hashtags:["傲嬌","精神狀態良好"],url:"https://h5.touchieai.com/character?code=6062f167-b9df-4d19-b243-76d88c82a8af",image:"/assets/work/雙雙 𝓈𝒽𝓊𝒶𝓃𝑔_錦霽.webp"},
   ],
 }
 zhaitangCreators[3]={
